@@ -6,7 +6,7 @@ import { Rating } from "@/components/atlas/Rating";
 import { findProduct, formatPrice, PRODUCTS, REVIEWS, RATING_DISTRIBUTION } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronRight, Heart, Minus, Plus, RotateCcw, ShieldCheck, Truck } from "lucide-react";
+import { BadgeCheck, ChevronRight, Heart, Lock, Minus, Plus, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/product/$slug")({
@@ -87,9 +87,12 @@ function PDP() {
             <h1 className="mt-2 font-display text-3xl font-light leading-tight sm:text-4xl">{product.name}</h1>
             <p className="mt-2 text-base text-muted-foreground">{product.tagline}</p>
 
-            <div className="mt-4 flex items-center gap-3">
+            <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1">
               <Rating value={product.rating} />
-              <span className="text-sm text-muted-foreground">{product.rating} · {product.reviewCount} verified reviews</span>
+              <span className="text-sm text-muted-foreground">{product.rating} · {product.reviewCount.toLocaleString()} reviews</span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--clay-soft)] px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[color:var(--clay)]">
+                <BadgeCheck size={10} /> Verified
+              </span>
             </div>
 
             <div className="mt-6 flex items-baseline gap-3">
@@ -119,9 +122,14 @@ function PDP() {
               </div>
             )}
 
-            <div className="mt-6 flex items-center gap-3 text-xs text-muted-foreground">
-              <span className={`inline-flex h-2 w-2 rounded-full ${product.stock < 10 ? "bg-[color:var(--clay)]" : "bg-green-600"}`} />
-              {product.stock < 10 ? `Only ${product.stock} left — selling fast` : "In stock and ready to ship"}
+            <div className="mt-6 flex items-center gap-2 text-xs">
+              <span className={`relative inline-flex h-2 w-2 rounded-full ${product.stock < 10 ? "bg-[color:var(--clay)]" : "bg-emerald-600"}`}>
+                <span className={`absolute inset-0 animate-ping rounded-full opacity-60 ${product.stock < 10 ? "bg-[color:var(--clay)]" : "bg-emerald-600"}`} />
+              </span>
+              <span className={product.stock < 10 ? "font-medium text-[color:var(--clay)]" : "text-foreground"}>
+                {product.stock < 10 ? `Only ${product.stock} left — selling fast` : "In stock"}
+              </span>
+              <span className="text-muted-foreground">· Ships today if ordered by 3pm</span>
             </div>
 
             <div className="mt-6 flex items-stretch gap-3">
@@ -140,6 +148,9 @@ function PDP() {
                 <Heart size={16} />
               </button>
             </div>
+            <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+              <Lock size={11} /> Secure checkout · Free 60-day returns · No questions asked
+            </p>
 
             <div className="mt-6 grid grid-cols-3 gap-3 rounded-2xl border border-border bg-secondary/40 p-4 text-center">
               {[
