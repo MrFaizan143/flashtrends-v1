@@ -91,6 +91,7 @@ function RootComponent() {
       <ThemeProvider>
         <CartProvider>
           <Outlet />
+          <Concierge />
           <Toaster />
         </CartProvider>
       </ThemeProvider>
