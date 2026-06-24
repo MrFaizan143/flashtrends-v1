@@ -4,7 +4,7 @@ import { ProductCard } from "@/components/atlas/ProductCard";
 import { PRODUCTS } from "@/lib/products";
 
 export const Route = createFileRoute("/wishlist")({
-  head: () => ({ meta: [{ title: "Wishlist — Atlas" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Wishlist — FlashTrends" }, { name: "robots", content: "noindex" }] }),
   component: Wishlist,
 });
 

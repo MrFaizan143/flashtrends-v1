@@ -213,7 +213,7 @@ export function Concierge() {
           />
 
           <section
-            aria-label="Atlas Concierge"
+            aria-label="FlashTrends Concierge"
             className={cn(
               "absolute flex flex-col overflow-hidden border border-border bg-card shadow-2xl",
               "inset-x-0 bottom-0 max-h-[88dvh] rounded-t-3xl",
@@ -232,7 +232,7 @@ export function Concierge() {
                     id="atlas-concierge-title"
                     className="font-display text-base leading-tight text-foreground"
                   >
-                    Atlas Concierge
+                    FlashTrends Concierge
                   </h2>
                   <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                     Personal shopping, in real time
@@ -316,7 +316,7 @@ export function Concierge() {
                   }}
                   rows={1}
                   placeholder="Ask anything…"
-                  aria-label="Message Atlas Concierge"
+                  aria-label="Message FlashTrends Concierge"
                   className="max-h-32 flex-1 resize-none bg-transparent py-1 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
                 />
                 <button

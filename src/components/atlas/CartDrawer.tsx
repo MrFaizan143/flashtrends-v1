@@ -1,7 +1,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useCart } from "@/lib/cart-store";
 import { formatPrice, PRODUCTS } from "@/lib/products";
-import { Minus, Plus, ShieldCheck, Truck, X } from "lucide-react";
+import { Lock, Minus, Plus, RotateCcw, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Progress } from "@/components/ui/progress";
 
@@ -93,13 +93,13 @@ export function CartDrawer() {
             <Link
               to="/checkout"
               onClick={() => setOpen(false)}
-              className="mt-4 flex h-12 w-full items-center justify-center rounded-full bg-foreground text-sm font-medium text-background transition-transform hover:scale-[1.01]"
+              className="mt-4 flex h-12 w-full items-center justify-center gap-1.5 rounded-full bg-foreground text-sm font-medium text-background transition-transform hover:scale-[1.01]"
             >
-              Checkout · {formatPrice(subtotal)}
+              <Lock size={13} /> Secure checkout · {formatPrice(subtotal)}
             </Link>
-            <div className="mt-3 flex items-center justify-center gap-5 text-[11px] text-muted-foreground">
-              <span className="inline-flex items-center gap-1"><ShieldCheck size={12} /> Secure</span>
-              <span className="inline-flex items-center gap-1"><Truck size={12} /> Free returns</span>
+            <div className="mt-3 flex items-center justify-center gap-4 text-[11px] text-muted-foreground">
+              <span className="inline-flex items-center gap-1"><RotateCcw size={11} /> Free 60-day returns</span>
+              <span className="inline-flex items-center gap-1">256-bit SSL · Encrypted</span>
             </div>
           </div>
         )}

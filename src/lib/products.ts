@@ -33,7 +33,7 @@ export const CATEGORIES: { id: Category; label: string; blurb: string; image: st
 export const PRODUCTS: Product[] = [
   {
     id: "p01", slug: "cashmere-overcoat", name: "Cashmere Overcoat", tagline: "Heirloom outerwear",
-    brand: "Atlas Atelier", category: "fashion", price: 689, compareAt: 820,
+    brand: "FlashTrends Atelier", category: "fashion", price: 689, compareAt: 820,
     rating: 4.8, reviewCount: 312, stock: 7, badges: ["Bestseller"],
     variants: { label: "Size", options: ["XS", "S", "M", "L", "XL"] },
     images: [U("1591047139829-d91aecb6caea"), U("1551028719-00167b16eac5"), U("1539109136881-3be0616acf4b")],
@@ -42,7 +42,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "p02", slug: "linen-shirt", name: "Heavyweight Linen Shirt", tagline: "Warm-weather essential",
-    brand: "Atlas Atelier", category: "fashion", price: 148,
+    brand: "FlashTrends Atelier", category: "fashion", price: 148,
     rating: 4.6, reviewCount: 188, stock: 24,
     variants: { label: "Size", options: ["S", "M", "L", "XL"] },
     images: [U("1564859228273-274232fdb516"), U("1602810318383-e386cc2a3ccf"), U("1620799140408-edc6dcb6d633")],
@@ -162,7 +162,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "p16", slug: "wool-throw", name: "Merino Wool Throw", tagline: "Heirloom blanket",
-    brand: "Atlas Atelier", category: "lifestyle", price: 195,
+    brand: "FlashTrends Atelier", category: "lifestyle", price: 195,
     rating: 4.9, reviewCount: 176, stock: 20,
     images: [U("1540574163026-643ea20ade25"), U("1522771739844-6a9f6d5f14af")],
     description: "Loomed in Scotland from 100% merino. Heavy, soft, and quietly luxurious.",
