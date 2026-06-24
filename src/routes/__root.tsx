@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../lib/cart-store";
 import { ThemeProvider } from "../lib/theme";
 import { Toaster } from "../components/ui/sonner";
+import { Concierge } from "../components/atlas/Concierge";
 
 function NotFoundComponent() {
   return (
@@ -90,6 +91,7 @@ function RootComponent() {
       <ThemeProvider>
         <CartProvider>
           <Outlet />
+          <Concierge />
           <Toaster />
         </CartProvider>
       </ThemeProvider>
