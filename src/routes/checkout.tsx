@@ -1,23 +1,97 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState, type InputHTMLAttributes } from "react";
 import { Shell } from "@/components/atlas/Shell";
 import { useCart } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/products";
-import { Apple, CheckCircle2, CreditCard, Lock, ShieldCheck, Truck } from "lucide-react";
+import { Apple, CheckCircle2, CreditCard, Lock, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Checkout — FlashTrends" }, { name: "robots", content: "noindex" }] }),
   component: Checkout,
 });
 
+type Errors = Record<string, string | undefined>;
+
+const required = (v: string) => (v.trim().length === 0 ? "Required" : undefined);
+const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const validators: Record<string, (v: string) => string | undefined> = {
+  email: (v) => (!v ? "Required" : !emailRe.test(v) ? "Enter a valid email" : undefined),
+  firstName: required,
+  lastName: required,
+  address: required,
+  city: required,
+  state: required,
+  zip: (v) => (!v ? "Required" : !/^\d{4,10}$/.test(v.replace(/\s/g, "")) ? "Enter a valid postal code" : undefined),
+  phone: (v) => (v && !/^[+\d\s()-]{7,}$/.test(v) ? "Enter a valid phone number" : undefined),
+  cardNumber: (v) => {
+    const d = v.replace(/\s/g, "");
+    if (!d) return "Required";
+    if (!/^\d{13,19}$/.test(d)) return "Card number looks off";
+    return undefined;
+  },
+  cardExp: (v) => {
+    if (!v) return "Required";
+    const m = v.match(/^(\d{2})\s*\/\s*(\d{2})$/);
+    if (!m) return "Use MM/YY";
+    const mm = parseInt(m[1], 10);
+    if (mm < 1 || mm > 12) return "Invalid month";
+    return undefined;
+  },
+  cardCvc: (v) => (!v ? "Required" : !/^\d{3,4}$/.test(v) ? "3 or 4 digits" : undefined),
+  cardName: required,
+};
+
 function Checkout() {
   const { lines, subtotal, clear } = useCart();
-  const [step, setStep] = useState<1 | 2 | 3 | "done">(1);
+  const [done, setDone] = useState(false);
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Errors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
   const shipping = subtotal > 150 || subtotal === 0 ? 0 : 9;
   const tax = +(subtotal * 0.08).toFixed(2);
   const total = subtotal + shipping + tax;
 
-  if (step === "done") {
+  const formValid = useMemo(() => {
+    const fields = Object.keys(validators);
+    return fields.every((f) => !validators[f](values[f] ?? ""));
+  }, [values]);
+
+  const setVal = (name: string, v: string) => {
+    setValues((prev) => ({ ...prev, [name]: v }));
+    // Live-clear error if the field is already touched and now valid
+    if (touched[name]) {
+      const err = validators[name]?.(v);
+      setErrors((prev) => ({ ...prev, [name]: err }));
+    }
+  };
+  const onBlur = (name: string) => {
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    const err = validators[name]?.(values[name] ?? "");
+    setErrors((prev) => ({ ...prev, [name]: err }));
+  };
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Validate all
+    const next: Errors = {};
+    let firstInvalid: string | undefined;
+    for (const f of Object.keys(validators)) {
+      const err = validators[f](values[f] ?? "");
+      next[f] = err;
+      if (err && !firstInvalid) firstInvalid = f;
+    }
+    setErrors(next);
+    setTouched(Object.fromEntries(Object.keys(validators).map((k) => [k, true])));
+    if (firstInvalid) {
+      document.getElementById(firstInvalid)?.focus();
+      return;
+    }
+    clear();
+    setDone(true);
+  };
+
+  if (done) {
     return (
       <Shell>
         <div className="mx-auto max-w-xl px-4 py-24 text-center">
@@ -36,74 +110,116 @@ function Checkout() {
   return (
     <Shell>
       <div className="mx-auto max-w-[1300px] px-4 py-10 sm:px-6 lg:px-10">
-        <Link to="/" className="font-display text-2xl">FlashTrends</Link>
+        <div className="flex items-center justify-between">
+          <Link to="/" className="font-display text-2xl lowercase">flashtrends</Link>
+          <p className="hidden items-center gap-1.5 text-xs text-muted-foreground sm:inline-flex">
+            <Lock size={12} /> Secure checkout · 256-bit SSL
+          </p>
+        </div>
         <h1 className="mt-6 font-display text-3xl sm:text-4xl">Checkout</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Checking out as a guest. <button type="button" className="underline underline-offset-2 hover:text-foreground">Sign in</button> if you'd like — it's optional.
+        </p>
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
-          <form
-            onSubmit={(e) => { e.preventDefault(); if (step < 3) setStep((step + 1) as 2 | 3); else { clear(); setStep("done"); } }}
-            className="space-y-8"
-          >
+        <form onSubmit={onSubmit} noValidate className="mt-8 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+          <div className="space-y-8">
             {/* Express */}
-            <section className="rounded-2xl border border-border p-5">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-wider">Express checkout</p>
+            <section aria-label="Express checkout" className="rounded-2xl border border-border p-5">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Express checkout — one tap</p>
               <div className="grid grid-cols-3 gap-2">
-                <button type="button" className="flex h-12 items-center justify-center rounded-full bg-foreground text-sm font-medium text-background"><Apple size={16} className="mr-1.5" /> Pay</button>
-                <button type="button" className="flex h-12 items-center justify-center rounded-full bg-[#5A31F4] text-sm font-medium text-white">Shop Pay</button>
-                <button type="button" className="flex h-12 items-center justify-center rounded-full bg-[#FFC439] text-sm font-medium text-black">PayPal</button>
+                <button type="button" aria-label="Pay with Apple Pay" className="flex h-12 items-center justify-center rounded-full bg-foreground text-sm font-medium text-background transition-transform hover:scale-[1.02]">
+                  <Apple size={16} className="mr-1.5" /> Pay
+                </button>
+                <button type="button" aria-label="Pay with Google Pay" className="flex h-12 items-center justify-center gap-1.5 rounded-full border border-border bg-background text-sm font-medium transition-colors hover:bg-secondary">
+                  <span className="font-semibold tracking-tight"><span className="text-[#4285F4]">G</span><span className="text-[#EA4335]">o</span><span className="text-[#FBBC05]">o</span><span className="text-[#4285F4]">g</span><span className="text-[#34A853]">l</span><span className="text-[#EA4335]">e</span></span>
+                  <span>Pay</span>
+                </button>
+                <button type="button" aria-label="Pay with Shop Pay" className="flex h-12 items-center justify-center rounded-full bg-[#5A31F4] text-sm font-semibold text-white transition-transform hover:scale-[1.02]">
+                  Shop Pay
+                </button>
               </div>
-              <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground"><span className="h-px flex-1 bg-border" /> Or pay with card <span className="h-px flex-1 bg-border" /></div>
+              <div className="my-5 flex items-center gap-3 text-[11px] uppercase tracking-wider text-muted-foreground">
+                <span className="h-px flex-1 bg-border" /> Or pay with card <span className="h-px flex-1 bg-border" />
+              </div>
             </section>
 
             {/* Contact */}
-            <Section title="Contact" step={1} current={step}>
-              <Input label="Email" type="email" autoComplete="email" required />
-              <label className="mt-3 flex items-center gap-2 text-sm text-muted-foreground"><input type="checkbox" defaultChecked className="accent-[color:var(--clay)]" /> Email me with news and offers</label>
+            <Section title="Contact" subtitle="So we can send your receipt and tracking">
+              <Field
+                id="email" label="Email" type="email" autoComplete="email" inputMode="email"
+                value={values.email} error={errors.email}
+                onChange={(v) => setVal("email", v)} onBlur={() => onBlur("email")}
+                placeholder="you@example.com" required
+              />
+              <label className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                <input type="checkbox" defaultChecked className="accent-[color:var(--clay)]" />
+                Email me about new arrivals (optional)
+              </label>
             </Section>
 
             {/* Shipping */}
-            <Section title="Shipping address" step={2} current={step}>
+            <Section title="Shipping address" subtitle="Where should we send your order?">
               <div className="grid gap-3 sm:grid-cols-2">
-                <Input label="First name" autoComplete="given-name" required />
-                <Input label="Last name" autoComplete="family-name" required />
+                <Field id="firstName" label="First name" autoComplete="given-name" value={values.firstName} error={errors.firstName} onChange={(v) => setVal("firstName", v)} onBlur={() => onBlur("firstName")} required />
+                <Field id="lastName" label="Last name" autoComplete="family-name" value={values.lastName} error={errors.lastName} onChange={(v) => setVal("lastName", v)} onBlur={() => onBlur("lastName")} required />
               </div>
-              <Input label="Address" autoComplete="street-address" required />
+              <Field id="address" label="Address" autoComplete="street-address" value={values.address} error={errors.address} onChange={(v) => setVal("address", v)} onBlur={() => onBlur("address")} required />
               <div className="grid gap-3 sm:grid-cols-3">
-                <Input label="City" autoComplete="address-level2" required />
-                <Input label="State" autoComplete="address-level1" required />
-                <Input label="ZIP" autoComplete="postal-code" required inputMode="numeric" />
+                <Field id="city" label="City" autoComplete="address-level2" value={values.city} error={errors.city} onChange={(v) => setVal("city", v)} onBlur={() => onBlur("city")} required />
+                <Field id="state" label="State" autoComplete="address-level1" value={values.state} error={errors.state} onChange={(v) => setVal("state", v)} onBlur={() => onBlur("state")} required />
+                <Field id="zip" label="ZIP" autoComplete="postal-code" inputMode="numeric" value={values.zip} error={errors.zip} onChange={(v) => setVal("zip", v)} onBlur={() => onBlur("zip")} required />
               </div>
-              <Input label="Phone" type="tel" autoComplete="tel" />
+              <Field id="phone" label="Phone (optional)" type="tel" autoComplete="tel" inputMode="tel" value={values.phone} error={errors.phone} onChange={(v) => setVal("phone", v)} onBlur={() => onBlur("phone")} />
             </Section>
 
             {/* Payment */}
-            <Section title="Payment" step={3} current={step}>
-              <Input label="Card number" autoComplete="cc-number" inputMode="numeric" placeholder="1234 5678 9012 3456" required />
+            <Section
+              title="Payment"
+              subtitle={
+                <span className="inline-flex items-center gap-1.5 text-[color:var(--clay)]">
+                  <Lock size={12} /> Encrypted with 256-bit SSL · Never stored on our servers
+                </span>
+              }
+            >
+              <Field id="cardNumber" label="Card number" autoComplete="cc-number" inputMode="numeric" placeholder="1234 5678 9012 3456" value={values.cardNumber} error={errors.cardNumber} onChange={(v) => setVal("cardNumber", v)} onBlur={() => onBlur("cardNumber")} required />
               <div className="grid gap-3 sm:grid-cols-2">
-                <Input label="Expiry (MM/YY)" autoComplete="cc-exp" placeholder="MM/YY" required />
-                <Input label="CVC" autoComplete="cc-csc" inputMode="numeric" placeholder="123" required />
+                <Field id="cardExp" label="Expiry (MM/YY)" autoComplete="cc-exp" placeholder="MM/YY" value={values.cardExp} error={errors.cardExp} onChange={(v) => setVal("cardExp", v)} onBlur={() => onBlur("cardExp")} required />
+                <Field id="cardCvc" label="CVC" autoComplete="cc-csc" inputMode="numeric" placeholder="123" value={values.cardCvc} error={errors.cardCvc} onChange={(v) => setVal("cardCvc", v)} onBlur={() => onBlur("cardCvc")} required />
               </div>
-              <Input label="Name on card" autoComplete="cc-name" required />
-              <p className="flex items-center gap-1.5 text-xs text-muted-foreground"><Lock size={12} /> Encrypted, never stored.</p>
+              <Field id="cardName" label="Name on card" autoComplete="cc-name" value={values.cardName} error={errors.cardName} onChange={(v) => setVal("cardName", v)} onBlur={() => onBlur("cardName")} required />
+              <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                {["VISA", "MC", "AMEX", "DISC"].map((b) => (
+                  <span key={b} className="rounded-md border border-border bg-secondary/50 px-1.5 py-0.5 text-[9px] font-semibold tracking-wider text-foreground/60">{b}</span>
+                ))}
+              </div>
             </Section>
 
-            <button
-              type="submit"
-              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-transform hover:scale-[1.005]"
-            >
-              {step === 3 ? <><CreditCard size={16} /> Pay {formatPrice(total)}</> : `Continue to ${step === 1 ? "shipping" : "payment"}`}
-            </button>
+            <div>
+              <button
+                type="submit"
+                disabled={lines.length === 0}
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-transform hover:scale-[1.005] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Lock size={14} /> Pay {formatPrice(total)}
+              </button>
+              {!formValid && Object.keys(touched).length > 0 && (
+                <p className="mt-2 text-center text-xs text-[color:var(--clay)]">Please fix the highlighted fields above.</p>
+              )}
+              <p className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+                <span className="inline-flex items-center gap-1"><ShieldCheck size={11} /> 256-bit SSL</span>
+                <span aria-hidden>·</span>
+                <span className="inline-flex items-center gap-1"><RotateCcw size={11} /> Free 60-day returns</span>
+                <span aria-hidden>·</span>
+                <span className="inline-flex items-center gap-1"><Truck size={11} /> Carbon-neutral shipping</span>
+              </p>
+            </div>
+          </div>
 
-            <p className="flex items-center justify-center gap-3 text-xs text-muted-foreground">
-              <ShieldCheck size={12} /> 256-bit SSL · <Truck size={12} /> Free 60-day returns
-            </p>
-          </form>
-
-          {/* Summary */}
+          {/* Sticky summary */}
           <aside className="lg:sticky lg:top-24 lg:self-start">
             <div className="rounded-3xl border border-border bg-secondary/40 p-6">
               <p className="font-display text-xl">Order summary</p>
-              <ul className="mt-4 space-y-4 border-b border-border pb-4">
+              <ul className="mt-4 max-h-[280px] space-y-4 overflow-y-auto border-b border-border pb-4 pr-1">
                 {lines.length === 0 && <li className="text-sm text-muted-foreground">Your bag is empty.</li>}
                 {lines.map((l) => (
                   <li key={l.product.id + (l.variant ?? "")} className="flex gap-3">
@@ -115,53 +231,93 @@ function Checkout() {
                       <p className="truncate text-sm">{l.product.name}</p>
                       <p className="text-xs text-muted-foreground">{l.variant ?? l.product.brand}</p>
                     </div>
-                    <p className="text-sm">{formatPrice(l.product.price * l.qty)}</p>
+                    <p className="text-sm tabular-nums">{formatPrice(l.product.price * l.qty)}</p>
                   </li>
                 ))}
               </ul>
+
+              <form className="mt-4 flex items-center gap-2">
+                <input
+                  type="text" name="promo" placeholder="Promo code" aria-label="Promo code"
+                  className="h-9 flex-1 rounded-full border border-border bg-background px-3 text-xs outline-none focus:border-foreground"
+                />
+                <button type="button" className="rounded-full border border-border px-3 py-1.5 text-xs hover:border-foreground">Apply</button>
+              </form>
+
               <dl className="mt-4 space-y-2 text-sm">
                 <Row label="Subtotal" value={formatPrice(subtotal)} />
-                <Row label="Shipping" value={shipping === 0 ? "Free" : formatPrice(shipping)} />
-                <Row label="Tax" value={formatPrice(tax)} />
+                <Row label={shipping === 0 ? "Shipping (free over $150)" : "Shipping"} value={shipping === 0 ? "Free" : formatPrice(shipping)} />
+                <Row label="Tax (est.)" value={formatPrice(tax)} />
               </dl>
               <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">
                 <span className="text-sm">Total</span>
-                <span className="font-display text-2xl">{formatPrice(total)}</span>
+                <span className="font-display text-2xl tabular-nums">{formatPrice(total)}</span>
+              </div>
+
+              <div className="mt-5 space-y-2 border-t border-border pt-4 text-xs text-muted-foreground">
+                <p className="flex items-start gap-2"><Truck size={12} className="mt-0.5 shrink-0 text-[color:var(--clay)]" /> Ships in 1–2 business days · Tracked delivery</p>
+                <p className="flex items-start gap-2"><RotateCcw size={12} className="mt-0.5 shrink-0 text-[color:var(--clay)]" /> Free returns within 60 days, no questions asked</p>
+                <p className="flex items-start gap-2"><ShieldCheck size={12} className="mt-0.5 shrink-0 text-[color:var(--clay)]" /> Buyer protection on every order</p>
               </div>
             </div>
           </aside>
-        </div>
+        </form>
       </div>
     </Shell>
   );
 }
 
-function Section({ title, step, current, children }: { title: string; step: number; current: number | "done"; children: React.ReactNode }) {
-  const active = current === step;
-  const done = typeof current === "number" && current > step;
+function Section({ title, subtitle, children }: { title: string; subtitle?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className={`rounded-2xl border p-5 transition ${active ? "border-foreground" : "border-border"} ${active ? "" : "opacity-80"}`}>
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold">{step}. {title}</p>
-        {done && <CheckCircle2 size={16} className="text-[color:var(--clay)]" />}
-      </div>
-      {active && <div className="mt-4 space-y-3">{children}</div>}
+    <section aria-labelledby={`sec-${title}`} className="rounded-2xl border border-border p-5">
+      <header>
+        <h2 id={`sec-${title}`} className="font-display text-lg">{title}</h2>
+        {subtitle && <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>}
+      </header>
+      <div className="mt-4 space-y-3">{children}</div>
     </section>
   );
 }
 
-function Input({ label, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
+type FieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "onBlur" | "value" | "id"> & {
+  id: string;
+  label: string;
+  value?: string;
+  error?: string;
+  onChange: (v: string) => void;
+  onBlur: () => void;
+};
+
+function Field({ id, label, value = "", error, onChange, onBlur, required, ...props }: FieldProps) {
+  const errId = `${id}-error`;
   return (
-    <label className="block">
-      <span className="text-xs text-muted-foreground">{label}</span>
+    <label htmlFor={id} className="block">
+      <span className="text-xs text-muted-foreground">
+        {label}
+        {required && <span aria-hidden className="ml-0.5 text-[color:var(--clay)]">*</span>}
+      </span>
       <input
+        id={id}
+        name={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
+        aria-invalid={!!error}
+        aria-describedby={error ? errId : undefined}
         {...props}
-        className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none transition focus:border-foreground focus:ring-2 focus:ring-[color:var(--clay)]/30"
+        className={`mt-1 h-11 w-full rounded-xl border bg-background px-4 text-sm outline-none transition focus:ring-2 ${
+          error
+            ? "border-[color:var(--clay)] focus:border-[color:var(--clay)] focus:ring-[color:var(--clay)]/30"
+            : "border-border focus:border-foreground focus:ring-[color:var(--clay)]/30"
+        }`}
       />
+      {error && (
+        <span id={errId} role="alert" className="mt-1 block text-[11px] text-[color:var(--clay)]">{error}</span>
+      )}
     </label>
   );
 }
 
 function Row({ label, value }: { label: string; value: string }) {
-  return <div className="flex items-center justify-between"><dt className="text-muted-foreground">{label}</dt><dd>{value}</dd></div>;
+  return <div className="flex items-center justify-between"><dt className="text-muted-foreground">{label}</dt><dd className="tabular-nums">{value}</dd></div>;
 }
