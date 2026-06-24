@@ -7,7 +7,7 @@ export function Footer() {
       <div className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6 lg:px-10">
         <div className="grid gap-12 md:grid-cols-[1.4fr_repeat(4,1fr)]">
           <div className="max-w-sm">
-            <p className="font-display text-3xl">Atlas</p>
+            <p className="font-display text-3xl">FlashTrends</p>
             <p className="mt-3 text-sm text-muted-foreground">
               A curated marketplace for the things you actually want — across fashion, beauty, home and beyond.
             </p>
@@ -44,7 +44,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Atlas. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} FlashTrends. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3 text-muted-foreground">
               <span className="text-[10px] uppercase tracking-widest">Secure checkout</span>

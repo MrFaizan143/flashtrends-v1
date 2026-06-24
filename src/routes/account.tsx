@@ -3,7 +3,7 @@ import { Shell } from "@/components/atlas/Shell";
 import { CheckCircle2, Package, Truck } from "lucide-react";
 
 export const Route = createFileRoute("/account")({
-  head: () => ({ meta: [{ title: "Account — Atlas" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Account — FlashTrends" }, { name: "robots", content: "noindex" }] }),
   component: Account,
 });
 

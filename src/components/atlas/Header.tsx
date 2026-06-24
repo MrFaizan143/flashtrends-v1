@@ -42,7 +42,7 @@ export function Header() {
           {mobileOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
 
-        <Link to="/" className="font-display text-2xl font-medium tracking-tight">Atlas</Link>
+        <Link to="/" className="font-display text-2xl font-medium tracking-tight">FlashTrends</Link>
 
         <nav className="ml-8 hidden items-center gap-7 md:flex" aria-label="Primary">
           {CATEGORIES.map((c) => (

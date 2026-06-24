@@ -6,7 +6,7 @@ import { formatPrice } from "@/lib/products";
 import { Apple, CheckCircle2, CreditCard, Lock, ShieldCheck, Truck } from "lucide-react";
 
 export const Route = createFileRoute("/checkout")({
-  head: () => ({ meta: [{ title: "Checkout — Atlas" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Checkout — FlashTrends" }, { name: "robots", content: "noindex" }] }),
   component: Checkout,
 });
 
@@ -36,7 +36,7 @@ function Checkout() {
   return (
     <Shell>
       <div className="mx-auto max-w-[1300px] px-4 py-10 sm:px-6 lg:px-10">
-        <Link to="/" className="font-display text-2xl">Atlas</Link>
+        <Link to="/" className="font-display text-2xl">FlashTrends</Link>
         <h1 className="mt-6 font-display text-3xl sm:text-4xl">Checkout</h1>
 
         <div className="mt-8 grid gap-10 lg:grid-cols-[1.4fr_1fr]">

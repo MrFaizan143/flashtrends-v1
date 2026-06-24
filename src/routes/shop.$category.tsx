@@ -11,7 +11,7 @@ export const Route = createFileRoute("/shop/$category")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.cat.label ?? "Shop"} — Atlas` },
+      { title: `${loaderData?.cat.label ?? "Shop"} — FlashTrends` },
       { name: "description", content: loaderData?.cat.blurb ?? "" },
       { property: "og:image", content: loaderData?.cat.image },
     ],

@@ -8,9 +8,9 @@ import { CATEGORIES, PRODUCTS, formatPrice } from "@/lib/products";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Atlas — Curated goods for considered living" },
+      { title: "FlashTrends — Curated goods for considered living" },
       { name: "description", content: "Fashion, beauty, electronics, home and lifestyle — chosen with care, shipped fast." },
-      { property: "og:title", content: "Atlas — Curated goods for considered living" },
+      { property: "og:title", content: "FlashTrends — Curated goods for considered living" },
       { property: "og:description", content: "A curated marketplace for the things you actually want." },
       { property: "og:image", content: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80" },
     ],
