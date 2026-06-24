@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Twitter, Youtube } from "lucide-react";
+import { Instagram, Lock, Twitter, Youtube } from "lucide-react";
 
 export function Footer() {
   return (
@@ -45,9 +45,11 @@ export function Footer() {
 
         <div className="mt-14 flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} FlashTrends. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <span className="text-[10px] uppercase tracking-widest">Secure checkout</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <span className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider">
+                <Lock size={10} /> SSL secure
+              </span>
               <div className="flex items-center gap-1.5">
                 {["VISA", "MC", "AMEX", "PAY"].map((b) => (
                   <span key={b} className="rounded-md border border-border bg-background px-2 py-1 text-[10px] font-semibold tracking-wider text-foreground/70">{b}</span>
