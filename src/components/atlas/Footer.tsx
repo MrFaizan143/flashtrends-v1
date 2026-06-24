@@ -7,7 +7,7 @@ export function Footer() {
       <div className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6 lg:px-10">
         <div className="grid gap-12 md:grid-cols-[1.4fr_repeat(4,1fr)]">
           <div className="max-w-sm">
-            <p className="font-display text-3xl">FlashTrends</p>
+            <p className="font-display text-3xl lowercase">flashtrends</p>
             <p className="mt-3 text-sm text-muted-foreground">
               A curated marketplace for the things you actually want — across fashion, beauty, home and beyond.
             </p>
