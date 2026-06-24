@@ -30,7 +30,8 @@ export const Route = createFileRoute("/product/$slug")({
 });
 
 function PDP() {
-  const { product } = Route.useLoaderData();
+  const data = Route.useLoaderData() as { product: import("@/lib/products").Product };
+  const { product } = data;
   const { add, setOpen } = useCart();
   const [variant, setVariant] = useState<string | undefined>(product.variants?.options[0]);
   const [qty, setQty] = useState(1);
