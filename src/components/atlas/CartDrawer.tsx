@@ -76,8 +76,8 @@ export function CartDrawer() {
                   <p className="text-xs text-muted-foreground">{formatPrice(upsell.price)}</p>
                 </div>
                 <button
-                  onClick={() => { /* add via hook */ }}
-                  className="rounded-full border border-foreground px-3 py-1.5 text-xs font-medium hover:bg-foreground hover:text-background"
+                  onClick={() => add(upsell)}
+                  className="rounded-full border border-foreground px-3 py-1.5 text-xs font-medium transition hover:bg-foreground hover:text-background"
                 >Add</button>
               </div>
             </div>
