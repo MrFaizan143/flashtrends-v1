@@ -1,14 +1,17 @@
 import { Link } from "@tanstack/react-router";
-import { Plus } from "lucide-react";
+import { Heart, Plus } from "lucide-react";
 import type { Product } from "@/lib/products";
 import { formatPrice } from "@/lib/products";
 import { Rating } from "./Rating";
 import { useCart } from "@/lib/cart-store";
+import { useWishlist } from "@/lib/wishlist-store";
 import { useReveal } from "@/lib/use-reveal";
 import { toast } from "sonner";
 
 export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
   const { add, setOpen } = useCart();
+  const { has, toggle } = useWishlist();
+  const saved = has(product.id);
   const { ref, visible } = useReveal<HTMLAnchorElement>();
   return (
     <Link
@@ -48,6 +51,19 @@ export function ProductCard({ product, priority = false }: { product: Product; p
             Save {formatPrice(product.compareAt - product.price)}
           </span>
         )}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            toggle(product.id);
+            toast.success(saved ? `${product.name} removed from wishlist` : `${product.name} saved to wishlist`);
+          }}
+          aria-label={saved ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
+          aria-pressed={saved}
+          className={`absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full backdrop-blur transition-all ${saved ? "bg-[color:var(--clay)] text-[color:var(--accent-foreground)]" : "bg-background/80 text-foreground hover:bg-background"} ${product.compareAt ? "top-12" : ""}`}
+        >
+          <Heart size={15} fill={saved ? "currentColor" : "none"} />
+        </button>
         <button
           type="button"
           onClick={(e) => {
