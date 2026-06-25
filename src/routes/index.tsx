@@ -254,7 +254,7 @@ function UGCStrip() {
     <section className="border-t border-border py-20">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
         <div className="flex flex-col items-center text-center">
-          <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">@atlas</p>
+          <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">@flashtrends</p>
           <h2 className="mt-3 font-display text-3xl font-light sm:text-4xl">As lived in by 240,000 readers</h2>
         </div>
         <div className="mt-10 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-6">
