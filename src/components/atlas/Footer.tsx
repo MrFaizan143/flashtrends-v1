@@ -24,18 +24,19 @@ export function Footer() {
             </form>
             <p className="mt-2 text-xs text-muted-foreground">10% off your first order. Unsubscribe any time.</p>
           </div>
-          {[
-            { title: "Shop", links: [["New", "/shop"], ["Fashion", "/shop/fashion"], ["Beauty", "/shop/beauty"], ["Home", "/shop/home"]] },
-            { title: "Help", links: [["Shipping", "/"], ["Returns", "/"], ["Contact", "/"], ["Order status", "/account"]] },
-            { title: "Company", links: [["Our story", "/"], ["Journal", "/"], ["Sustainability", "/"], ["Careers", "/"]] },
-            { title: "Legal", links: [["Terms", "/"], ["Privacy", "/"], ["Cookies", "/"], ["Accessibility", "/"]] },
-          ].map((col) => (
+          {([
+            { title: "Shop", links: [{ label: "All", to: "/shop" as const }, { label: "Fashion", to: "/shop/$category" as const, params: { category: "fashion" } }, { label: "Beauty", to: "/shop/$category" as const, params: { category: "beauty" } }, { label: "Home", to: "/shop/$category" as const, params: { category: "home" } }] },
+            { title: "Help", links: [{ label: "Shipping", to: "/" as const }, { label: "Returns", to: "/" as const }, { label: "Contact", to: "/" as const }, { label: "Order status", to: "/account" as const }] },
+            { title: "Company", links: [{ label: "Our story", to: "/" as const }, { label: "Journal", to: "/" as const }, { label: "Sustainability", to: "/" as const }, { label: "Careers", to: "/" as const }] },
+            { title: "Legal", links: [{ label: "Terms", to: "/" as const }, { label: "Privacy", to: "/" as const }, { label: "Cookies", to: "/" as const }, { label: "Accessibility", to: "/" as const }] },
+          ]).map((col) => (
             <div key={col.title}>
               <h4 className="text-xs font-semibold uppercase tracking-[0.16em] text-foreground">{col.title}</h4>
               <ul className="mt-4 space-y-2.5">
-                {col.links.map(([label, href]) => (
-                  <li key={label}>
-                    <Link to={href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">{label}</Link>
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    {/* @ts-expect-error - heterogeneous to/params union */}
+                    <Link to={l.to} params={l.params} className="text-sm text-muted-foreground transition-colors hover:text-foreground">{l.label}</Link>
                   </li>
                 ))}
               </ul>
