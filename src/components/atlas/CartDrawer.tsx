@@ -8,9 +8,10 @@ import { Progress } from "@/components/ui/progress";
 const FREE_SHIP_THRESHOLD = 150;
 
 export function CartDrawer() {
-  const { open, setOpen, lines, setQty, remove, subtotal } = useCart();
+  const { open, setOpen, lines, setQty, remove, subtotal, add } = useCart();
   const remaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
-  const upsell = PRODUCTS.find((p) => p.id === "p14")!;
+  const upsell = PRODUCTS.find((p) => p.id === "p14" && !lines.some((l) => l.product.id === p.id))
+    ?? PRODUCTS.find((p) => !lines.some((l) => l.product.id === p.id))!;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
