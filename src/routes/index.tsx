@@ -90,7 +90,7 @@ function Hero() {
               Shop the edit
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </Link>
-            <Link to="/shop/home" className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-6 py-3.5 text-sm font-medium text-white backdrop-blur hover:bg-white/20">
+            <Link to="/shop/$category" params={{ category: "home" }} className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-6 py-3.5 text-sm font-medium text-white backdrop-blur transition hover:bg-white/20">
               Explore home
             </Link>
           </div>
@@ -133,21 +133,21 @@ function Bento() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:auto-rows-[180px]">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:auto-rows-[180px]">
         {/* Hero card */}
-        <Link to="/shop/$category" params={{ category: "fashion" }} className="group relative col-span-1 row-span-1 overflow-hidden rounded-3xl bg-secondary md:col-span-2 md:row-span-3">
-          <img src={CATEGORIES[0].image} alt="" className="h-full min-h-[420px] w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" />
+        <Link to="/shop/$category" params={{ category: "fashion" }} className="group relative overflow-hidden rounded-3xl bg-secondary sm:col-span-2 lg:row-span-3">
+          <img src={CATEGORIES[0].image} alt="" className="h-full min-h-[360px] w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105 lg:min-h-[560px]" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
             <p className="text-[10px] uppercase tracking-[0.3em] text-white/80">Fashion</p>
-            <h3 className="mt-2 font-display text-3xl font-light text-white sm:text-5xl">Quiet luxury, in pieces you'll keep.</h3>
+            <h3 className="mt-2 font-display text-3xl font-light text-white sm:text-4xl lg:text-5xl">Quiet luxury, in pieces you'll keep.</h3>
             <span className="mt-4 inline-flex items-center gap-1.5 text-sm text-white">Shop fashion <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" /></span>
           </div>
         </Link>
 
         {/* Tall card */}
-        <Link to="/shop/$category" params={{ category: "beauty" }} className="group relative overflow-hidden rounded-3xl bg-secondary md:col-span-1 md:row-span-2">
-          <img src={CATEGORIES[1].image} alt="" className="h-full min-h-[260px] w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" />
+        <Link to="/shop/$category" params={{ category: "beauty" }} className="group relative overflow-hidden rounded-3xl bg-secondary lg:row-span-2">
+          <img src={CATEGORIES[1].image} alt="" className="h-full min-h-[240px] w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
           <div className="absolute bottom-4 left-4 right-4">
             <p className="text-[10px] uppercase tracking-[0.3em] text-white/80">Beauty</p>
@@ -156,7 +156,7 @@ function Bento() {
         </Link>
 
         {/* Featured product card */}
-        <div className="relative overflow-hidden rounded-3xl bg-[color:var(--clay-soft)] p-6 md:col-span-1 md:row-span-1">
+        <div className="relative overflow-hidden rounded-3xl bg-[color:var(--clay-soft)] p-6 min-h-[180px]">
           <Sparkles className="text-[color:var(--clay)]" size={18} />
           <p className="mt-3 text-xs uppercase tracking-[0.2em] text-foreground/70">This week's hero</p>
           <h3 className="mt-2 font-display text-xl text-foreground">{hero.name}</h3>
@@ -166,8 +166,8 @@ function Bento() {
           </Link>
         </div>
 
-        <Link to="/shop/$category" params={{ category: "electronics" }} className="group relative overflow-hidden rounded-3xl bg-secondary md:col-span-1 md:row-span-1">
-          <img src={CATEGORIES[2].image} alt="" className="h-full min-h-[180px] w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" />
+        <Link to="/shop/$category" params={{ category: "electronics" }} className="group relative overflow-hidden rounded-3xl bg-secondary min-h-[180px]">
+          <img src={CATEGORIES[2].image} alt="" className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
           <div className="absolute bottom-3 left-4">
             <p className="text-[10px] uppercase tracking-[0.3em] text-white/80">Electronics</p>
@@ -175,8 +175,8 @@ function Bento() {
           </div>
         </Link>
 
-        <Link to="/shop/$category" params={{ category: "home" }} className="group relative overflow-hidden rounded-3xl bg-secondary md:col-span-2 md:row-span-1">
-          <img src={CATEGORIES[3].image} alt="" className="h-full min-h-[180px] w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" />
+        <Link to="/shop/$category" params={{ category: "home" }} className="group relative overflow-hidden rounded-3xl bg-secondary min-h-[180px] sm:col-span-2 lg:col-span-2">
+          <img src={CATEGORIES[3].image} alt="" className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/55 to-transparent" />
           <div className="absolute inset-y-0 left-0 flex flex-col justify-center p-6">
             <p className="text-[10px] uppercase tracking-[0.3em] text-white/80">Home</p>
@@ -254,7 +254,7 @@ function UGCStrip() {
     <section className="border-t border-border py-20">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
         <div className="flex flex-col items-center text-center">
-          <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">@atlas</p>
+          <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">@flashtrends</p>
           <h2 className="mt-3 font-display text-3xl font-light sm:text-4xl">As lived in by 240,000 readers</h2>
         </div>
         <div className="mt-10 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-6">
