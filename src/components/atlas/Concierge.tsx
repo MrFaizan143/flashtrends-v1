@@ -186,9 +186,9 @@ export function Concierge() {
         aria-controls="atlas-concierge-panel"
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "fixed z-50 flex size-14 items-center justify-center rounded-full bg-clay text-[oklch(0.99_0.005_80)] shadow-[0_10px_30px_-10px_oklch(0.58_0.135_38_/_0.55)] transition-all duration-200 motion-reduce:transition-none",
-          "right-5 bottom-24 lg:bottom-6",
-          "hover:scale-105 active:scale-95",
+          "fixed z-40 flex size-14 items-center justify-center rounded-full bg-clay text-[oklch(0.99_0.005_80)] shadow-[0_10px_30px_-10px_oklch(0.58_0.135_38_/_0.55)] transition-all duration-200 motion-reduce:transition-none",
+          "right-4 bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] sm:right-5 lg:bottom-6",
+          "hover:scale-105 active:scale-95 motion-reduce:hover:scale-100",
           open && "scale-90 opacity-0 pointer-events-none",
         )}
       >
