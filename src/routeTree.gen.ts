@@ -10,7 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WishlistRouteImport } from './routes/wishlist'
+import { Route as SustainabilityRouteImport } from './routes/sustainability'
+import { Route as ShippingRouteImport } from './routes/shipping'
+import { Route as ReturnsRouteImport } from './routes/returns'
+import { Route as OurStoryRouteImport } from './routes/our-story'
+import { Route as JournalRouteImport } from './routes/journal'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
@@ -23,9 +30,44 @@ const WishlistRoute = WishlistRouteImport.update({
   path: '/wishlist',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SustainabilityRoute = SustainabilityRouteImport.update({
+  id: '/sustainability',
+  path: '/sustainability',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShippingRoute = ShippingRouteImport.update({
+  id: '/shipping',
+  path: '/shipping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReturnsRoute = ReturnsRouteImport.update({
+  id: '/returns',
+  path: '/returns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OurStoryRoute = OurStoryRouteImport.update({
+  id: '/our-story',
+  path: '/our-story',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -62,7 +104,14 @@ const ApiChatRoute = ApiChatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/careers': typeof CareersRoute
   '/checkout': typeof CheckoutRoute
+  '/contact': typeof ContactRoute
+  '/journal': typeof JournalRoute
+  '/our-story': typeof OurStoryRoute
+  '/returns': typeof ReturnsRoute
+  '/shipping': typeof ShippingRoute
+  '/sustainability': typeof SustainabilityRoute
   '/wishlist': typeof WishlistRoute
   '/api/chat': typeof ApiChatRoute
   '/product/$slug': typeof ProductSlugRoute
@@ -72,7 +121,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/careers': typeof CareersRoute
   '/checkout': typeof CheckoutRoute
+  '/contact': typeof ContactRoute
+  '/journal': typeof JournalRoute
+  '/our-story': typeof OurStoryRoute
+  '/returns': typeof ReturnsRoute
+  '/shipping': typeof ShippingRoute
+  '/sustainability': typeof SustainabilityRoute
   '/wishlist': typeof WishlistRoute
   '/api/chat': typeof ApiChatRoute
   '/product/$slug': typeof ProductSlugRoute
@@ -83,7 +139,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/careers': typeof CareersRoute
   '/checkout': typeof CheckoutRoute
+  '/contact': typeof ContactRoute
+  '/journal': typeof JournalRoute
+  '/our-story': typeof OurStoryRoute
+  '/returns': typeof ReturnsRoute
+  '/shipping': typeof ShippingRoute
+  '/sustainability': typeof SustainabilityRoute
   '/wishlist': typeof WishlistRoute
   '/api/chat': typeof ApiChatRoute
   '/product/$slug': typeof ProductSlugRoute
@@ -95,7 +158,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
+    | '/careers'
     | '/checkout'
+    | '/contact'
+    | '/journal'
+    | '/our-story'
+    | '/returns'
+    | '/shipping'
+    | '/sustainability'
     | '/wishlist'
     | '/api/chat'
     | '/product/$slug'
@@ -105,7 +175,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account'
+    | '/careers'
     | '/checkout'
+    | '/contact'
+    | '/journal'
+    | '/our-story'
+    | '/returns'
+    | '/shipping'
+    | '/sustainability'
     | '/wishlist'
     | '/api/chat'
     | '/product/$slug'
@@ -115,7 +192,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/account'
+    | '/careers'
     | '/checkout'
+    | '/contact'
+    | '/journal'
+    | '/our-story'
+    | '/returns'
+    | '/shipping'
+    | '/sustainability'
     | '/wishlist'
     | '/api/chat'
     | '/product/$slug'
@@ -126,7 +210,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
+  CareersRoute: typeof CareersRoute
   CheckoutRoute: typeof CheckoutRoute
+  ContactRoute: typeof ContactRoute
+  JournalRoute: typeof JournalRoute
+  OurStoryRoute: typeof OurStoryRoute
+  ReturnsRoute: typeof ReturnsRoute
+  ShippingRoute: typeof ShippingRoute
+  SustainabilityRoute: typeof SustainabilityRoute
   WishlistRoute: typeof WishlistRoute
   ApiChatRoute: typeof ApiChatRoute
   ProductSlugRoute: typeof ProductSlugRoute
@@ -143,11 +234,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sustainability': {
+      id: '/sustainability'
+      path: '/sustainability'
+      fullPath: '/sustainability'
+      preLoaderRoute: typeof SustainabilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shipping': {
+      id: '/shipping'
+      path: '/shipping'
+      fullPath: '/shipping'
+      preLoaderRoute: typeof ShippingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/returns': {
+      id: '/returns'
+      path: '/returns'
+      fullPath: '/returns'
+      preLoaderRoute: typeof ReturnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/our-story': {
+      id: '/our-story'
+      path: '/our-story'
+      fullPath: '/our-story'
+      preLoaderRoute: typeof OurStoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal': {
+      id: '/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkout': {
       id: '/checkout'
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -198,7 +338,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
+  CareersRoute: CareersRoute,
   CheckoutRoute: CheckoutRoute,
+  ContactRoute: ContactRoute,
+  JournalRoute: JournalRoute,
+  OurStoryRoute: OurStoryRoute,
+  ReturnsRoute: ReturnsRoute,
+  ShippingRoute: ShippingRoute,
+  SustainabilityRoute: SustainabilityRoute,
   WishlistRoute: WishlistRoute,
   ApiChatRoute: ApiChatRoute,
   ProductSlugRoute: ProductSlugRoute,
