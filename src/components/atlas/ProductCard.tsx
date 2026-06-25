@@ -4,14 +4,22 @@ import type { Product } from "@/lib/products";
 import { formatPrice } from "@/lib/products";
 import { Rating } from "./Rating";
 import { useCart } from "@/lib/cart-store";
+import { useReveal } from "@/lib/use-reveal";
 import { toast } from "sonner";
 
 export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
   const { add, setOpen } = useCart();
+  const { ref, visible } = useReveal<HTMLAnchorElement>();
   return (
     <Link
+      ref={ref}
       to="/product/$slug"
       params={{ slug: product.slug }}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(14px)",
+        transition: "opacity 600ms cubic-bezier(0.2,0.7,0.2,1), transform 600ms cubic-bezier(0.2,0.7,0.2,1)",
+      }}
       className="group relative block"
     >
       <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-secondary">
