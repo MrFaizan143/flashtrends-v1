@@ -127,7 +127,7 @@ function OrderDetail() {
           <section className="rounded-3xl border border-border bg-card p-6 sm:p-8">
             <h2 className="font-display text-xl">Items</h2>
             <ul className="mt-4 divide-y divide-border">
-              {order.items.map((it) => (
+              {order.items.map((it: OrderItem) => (
                 <li key={it.name} className="flex gap-4 py-4">
                   <img src={it.image} alt={it.name} className="h-20 w-20 rounded-xl object-cover" />
                   <div className="flex flex-1 items-start justify-between gap-3">

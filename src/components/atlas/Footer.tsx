@@ -72,8 +72,7 @@ export function Footer() {
               <ul className="mt-4 space-y-2.5">
                 {col.links.map((l) => (
                   <li key={l.label}>
-                    {/* @ts-expect-error - heterogeneous to/params union */}
-                    <Link to={l.to} params={l.params} className="text-sm text-muted-foreground transition-colors hover:text-foreground">{l.label}</Link>
+                    <Link to={l.to} params={l.params as never} className="text-sm text-muted-foreground transition-colors hover:text-foreground">{l.label}</Link>
                   </li>
                 ))}
               </ul>
