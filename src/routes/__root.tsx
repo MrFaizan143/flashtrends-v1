@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../lib/cart-store";
 import { WishlistProvider } from "../lib/wishlist-store";
+import { RewardsProvider } from "../lib/rewards-store";
 import { ThemeProvider } from "../lib/theme";
 import { Toaster } from "../components/ui/sonner";
 import { Concierge } from "../components/atlas/Concierge";
@@ -96,9 +97,11 @@ function RootComponent() {
       <ThemeProvider>
         <CartProvider>
           <WishlistProvider>
-            <Outlet />
-            <Concierge />
-            <Toaster />
+            <RewardsProvider>
+              <Outlet />
+              <Concierge />
+              <Toaster />
+            </RewardsProvider>
           </WishlistProvider>
         </CartProvider>
       </ThemeProvider>
