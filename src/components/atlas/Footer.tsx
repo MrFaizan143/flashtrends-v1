@@ -28,6 +28,7 @@ const COLUMNS: FooterCol[] = [
     links: [
       { label: "Our story", to: "/our-story" },
       { label: "Journal", to: "/journal" },
+      { label: "Rewards", to: "/rewards" },
       { label: "Sustainability", to: "/sustainability" },
       { label: "Careers", to: "/careers" },
     ],

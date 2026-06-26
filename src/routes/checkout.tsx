@@ -2,8 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState, type InputHTMLAttributes } from "react";
 import { Shell } from "@/components/atlas/Shell";
 import { useCart } from "@/lib/cart-store";
+import { useRewards, REWARDS_CONSTANTS } from "@/lib/rewards-store";
 import { formatPrice } from "@/lib/products";
-import { Apple, CheckCircle2, CreditCard, Lock, RotateCcw, ShieldCheck, Truck } from "lucide-react";
+import { Apple, Award, CheckCircle2, Lock, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Checkout — FlashTrends" }, { name: "robots", content: "noindex" }] }),
@@ -43,14 +44,23 @@ const validators: Record<string, (v: string) => string | undefined> = {
 
 function Checkout() {
   const { lines, subtotal, clear } = useCart();
+  const rewards = useRewards();
   const [done, setDone] = useState(false);
+  const [earnedPoints, setEarnedPoints] = useState(0);
   const [values, setValues] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<Errors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const shipping = subtotal > 150 || subtotal === 0 ? 0 : 9;
+  // Points redemption (Silver+ also gets free shipping)
+  const [pointsInput, setPointsInput] = useState<string>("");
+  const [pointsApplied, setPointsApplied] = useState(0);
+  const [pointsMsg, setPointsMsg] = useState<string | null>(null);
+
+  const silverPlus = rewards.tier === "Silver" || rewards.tier === "Gold";
+  const shipping = subtotal === 0 ? 0 : silverPlus || subtotal > 150 ? 0 : 9;
   const tax = +(subtotal * 0.08).toFixed(2);
-  const total = subtotal + shipping + tax;
+  const pointsDiscount = +(pointsApplied / REWARDS_CONSTANTS.POINTS_PER_DOLLAR).toFixed(2);
+  const total = Math.max(0, +(subtotal + shipping + tax - pointsDiscount).toFixed(2));
 
   const formValid = useMemo(() => {
     const fields = Object.keys(validators);
@@ -87,8 +97,42 @@ function Checkout() {
       document.getElementById(firstInvalid)?.focus();
       return;
     }
+    // Deduct redeemed points (already redeemed via Apply button, no-op here)
+    // Award new points based on dollars spent (post-discount, pre-tax)
+    const dollarsForPoints = Math.max(0, subtotal - pointsDiscount);
+    const earned = rewards.award(dollarsForPoints);
+    setEarnedPoints(earned);
     clear();
     setDone(true);
+  };
+
+  const onApplyPoints = () => {
+    const n = Math.floor(Number(pointsInput));
+    if (!Number.isFinite(n) || n <= 0) {
+      setPointsMsg("Enter a number of points to apply.");
+      return;
+    }
+    if (n < REWARDS_CONSTANTS.MIN_REDEEM) {
+      setPointsMsg(`Minimum redemption is ${REWARDS_CONSTANTS.MIN_REDEEM} points.`);
+      return;
+    }
+    if (n > rewards.balance) {
+      setPointsMsg("You don't have that many points.");
+      return;
+    }
+    const maxBySubtotal = Math.floor(subtotal * REWARDS_CONSTANTS.POINTS_PER_DOLLAR);
+    if (n > maxBySubtotal) {
+      setPointsMsg(`You can apply up to ${maxBySubtotal.toLocaleString()} pts on this order.`);
+      return;
+    }
+    const res = rewards.redeem(n);
+    if (!res.ok) {
+      setPointsMsg("Couldn't redeem those points.");
+      return;
+    }
+    setPointsApplied(n);
+    setPointsMsg(null);
+    setPointsInput("");
   };
 
   if (done) {
@@ -98,8 +142,17 @@ function Checkout() {
           <CheckCircle2 className="mx-auto text-[color:var(--clay)]" size={48} />
           <h1 className="mt-6 font-display text-4xl">Order confirmed</h1>
           <p className="mt-3 text-muted-foreground">A receipt is on its way to your inbox. Track your order anytime from your account.</p>
+          {earnedPoints > 0 && (
+            <div className="mx-auto mt-8 inline-flex items-center gap-3 rounded-2xl border border-border bg-[color:var(--clay-soft)]/40 px-5 py-3">
+              <Award size={18} className="text-[color:var(--clay)]" />
+              <p className="text-sm">
+                You earned <span className="font-semibold">{earnedPoints.toLocaleString()} points</span> on this order.
+              </p>
+            </div>
+          )}
           <div className="mt-8 flex justify-center gap-3">
             <Link to="/account" className="rounded-full bg-foreground px-6 py-3 text-sm text-background">Track order</Link>
+            <Link to="/rewards" className="rounded-full border border-border px-6 py-3 text-sm">View rewards</Link>
             <Link to="/shop" className="rounded-full border border-border px-6 py-3 text-sm">Keep shopping</Link>
           </div>
         </div>
@@ -244,10 +297,69 @@ function Checkout() {
                 <button type="button" className="rounded-full border border-border px-3 py-1.5 text-xs hover:border-foreground">Apply</button>
               </form>
 
+              {/* Rewards: apply points */}
+              <div className="mt-4 rounded-2xl border border-border bg-background/60 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[color:var(--clay)]">
+                    <Award size={12} /> Rewards
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {rewards.balance.toLocaleString()} pts · ${rewards.pointsToDollars(rewards.balance).toFixed(2)}
+                  </p>
+                </div>
+                {pointsApplied > 0 ? (
+                  <div className="mt-2 flex items-center justify-between gap-2 text-xs">
+                    <span>
+                      Applied <span className="font-medium">{pointsApplied.toLocaleString()} pts</span> · −${pointsDiscount.toFixed(2)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => { setPointsApplied(0); setPointsMsg(null); }}
+                      className="rounded-full border border-border px-2.5 py-1 text-[10px] hover:border-foreground"
+                    >Remove</button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="mt-2 flex items-center gap-2">
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        min={REWARDS_CONSTANTS.MIN_REDEEM}
+                        max={rewards.balance}
+                        step={50}
+                        value={pointsInput}
+                        onChange={(e) => setPointsInput(e.target.value)}
+                        placeholder={`Min ${REWARDS_CONSTANTS.MIN_REDEEM}`}
+                        aria-label="Points to apply"
+                        className="h-9 flex-1 rounded-full border border-border bg-background px-3 text-xs outline-none focus:border-foreground"
+                      />
+                      <button
+                        type="button"
+                        onClick={onApplyPoints}
+                        disabled={rewards.balance < REWARDS_CONSTANTS.MIN_REDEEM || subtotal === 0}
+                        className="rounded-full border border-border px-3 py-1.5 text-xs hover:border-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                      >Apply</button>
+                    </div>
+                    {pointsMsg && <p className="mt-1.5 text-[11px] text-[color:var(--clay)]">{pointsMsg}</p>}
+                    {!pointsMsg && (
+                      <p className="mt-1.5 text-[11px] text-muted-foreground">
+                        50 pts = $1 off. Min {REWARDS_CONSTANTS.MIN_REDEEM} pts.
+                      </p>
+                    )}
+                  </>
+                )}
+              </div>
+
               <dl className="mt-4 space-y-2 text-sm">
                 <Row label="Subtotal" value={formatPrice(subtotal)} />
-                <Row label={shipping === 0 ? "Shipping (free over $150)" : "Shipping"} value={shipping === 0 ? "Free" : formatPrice(shipping)} />
+                <Row label={silverPlus ? "Shipping (Silver perk)" : shipping === 0 ? "Shipping (free over $150)" : "Shipping"} value={shipping === 0 ? "Free" : formatPrice(shipping)} />
                 <Row label="Tax (est.)" value={formatPrice(tax)} />
+                {pointsApplied > 0 && (
+                  <div className="flex items-center justify-between text-[color:var(--clay)]">
+                    <dt>Points discount ({pointsApplied.toLocaleString()} pts)</dt>
+                    <dd className="tabular-nums">−{formatPrice(pointsDiscount)}</dd>
+                  </div>
+                )}
               </dl>
               <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">
                 <span className="text-sm">Total</span>

@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles, Truck, RotateCcw, ShieldCheck } from "lucide-react";
+import { ArrowRight, Award, ChevronLeft, ChevronRight, Gift, Sparkles, Truck, RotateCcw, ShieldCheck } from "lucide-react";
 import { Shell } from "@/components/atlas/Shell";
 import { ProductCard } from "@/components/atlas/ProductCard";
 import { CATEGORIES, PRODUCTS, formatPrice } from "@/lib/products";
+import { ARTICLES } from "@/lib/journal-articles";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,7 +27,9 @@ function Home() {
       <Bento />
       <Bestsellers />
       <ValueProps />
+      <RewardsBanner />
       <UGCStrip />
+      <JournalTeaser />
       <EmailCapture />
     </Shell>
   );
@@ -283,6 +286,92 @@ function EmailCapture() {
             <button className="h-12 rounded-full bg-[color:var(--clay)] px-7 text-sm font-medium text-[color:var(--accent-foreground)] transition-transform hover:scale-[1.02]">Subscribe</button>
           </form>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function RewardsBanner() {
+  return (
+    <section className="mx-auto max-w-[1400px] px-4 pb-4 sm:px-6 lg:px-10">
+      <div className="relative overflow-hidden rounded-3xl border border-border bg-[color:var(--clay-soft)] px-6 py-12 sm:px-12 sm:py-16">
+        <div className="absolute -right-16 -top-16 h-72 w-72 rounded-full bg-[color:var(--clay)]/25 blur-3xl" aria-hidden />
+        <div className="relative grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+          <div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-background px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--clay)]">
+              <Award size={12} /> FlashTrends Rewards
+            </span>
+            <h2 className="mt-5 max-w-2xl text-balance font-display text-4xl font-light leading-[1.05] text-foreground sm:text-5xl">
+              Earn on every order. <em className="font-normal italic text-[color:var(--clay)]">Redeem on the next.</em>
+            </h2>
+            <p className="mt-4 max-w-xl text-sm text-foreground/70 sm:text-base">
+              One point per dollar. Free shipping at Silver. 1.5× points and 2-day delivery at Gold. No fees, no expiry, no fuss.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Link to="/rewards" className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-transform hover:scale-[1.02]">
+                Join Rewards <ArrowRight size={14} />
+              </Link>
+              <Link to="/rewards" className="text-sm font-medium text-foreground/70 hover:text-[color:var(--clay)]">
+                See how it works
+              </Link>
+            </div>
+          </div>
+
+          <ul className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            {[
+              { icon: Sparkles, title: "Member", body: "1× points, birthday surprise" },
+              { icon: Award, title: "Silver · 500 pts", body: "Free shipping always, 1.25× points" },
+              { icon: Gift, title: "Gold · 1,500 pts", body: "Free 2-day, 1.5× points, private restocks" },
+            ].map((t) => (
+              <li key={t.title} className="flex items-start gap-3 rounded-2xl border border-border bg-background/70 p-4 backdrop-blur">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[color:var(--clay)] text-[color:var(--accent-foreground)]">
+                  <t.icon size={14} />
+                </span>
+                <div>
+                  <p className="text-sm font-semibold">{t.title}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{t.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function JournalTeaser() {
+  const featured = ARTICLES.slice(0, 3);
+  return (
+    <section className="border-t border-border bg-secondary/30 py-20 lg:py-24">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
+        <div className="flex items-end justify-between gap-6">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">From the Journal</p>
+            <h2 className="mt-3 font-display text-3xl font-light sm:text-4xl">Quiet writing on objects worth owning.</h2>
+          </div>
+          <Link to="/journal" className="hidden shrink-0 items-center gap-2 text-sm font-medium hover:text-[color:var(--clay)] sm:inline-flex">
+            All articles <ArrowRight size={14} />
+          </Link>
+        </div>
+
+        <div className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((a) => (
+            <Link key={a.slug} to="/journal/$slug" params={{ slug: a.slug }} className="group block">
+              <div className="overflow-hidden rounded-2xl bg-secondary">
+                <img src={a.image} alt={a.title} loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105" />
+              </div>
+              <p className="mt-4 text-[11px] uppercase tracking-[0.18em] text-[color:var(--clay)]">{a.cat}</p>
+              <h3 className="mt-2 font-display text-xl leading-snug transition-colors group-hover:text-[color:var(--clay)] sm:text-2xl">{a.title}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{a.excerpt}</p>
+              <p className="mt-3 text-xs uppercase tracking-wider text-muted-foreground">{a.date}</p>
+            </Link>
+          ))}
+        </div>
+
+        <Link to="/journal" className="mt-8 inline-flex items-center gap-1 text-sm font-medium hover:text-[color:var(--clay)] sm:hidden">
+          All articles <ArrowRight size={14} />
+        </Link>
       </div>
     </section>
   );

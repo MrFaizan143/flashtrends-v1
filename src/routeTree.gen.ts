@@ -13,6 +13,7 @@ import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SustainabilityRouteImport } from './routes/sustainability'
 import { Route as ShippingRouteImport } from './routes/shipping'
+import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as ReturnsRouteImport } from './routes/returns'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OurStoryRouteImport } from './routes/our-story'
@@ -28,6 +29,7 @@ import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as ShopCategoryRouteImport } from './routes/shop.$category'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const WishlistRoute = WishlistRouteImport.update({
@@ -48,6 +50,11 @@ const SustainabilityRoute = SustainabilityRouteImport.update({
 const ShippingRoute = ShippingRouteImport.update({
   id: '/shipping',
   path: '/shipping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RewardsRoute = RewardsRouteImport.update({
+  id: '/rewards',
+  path: '/rewards',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReturnsRoute = ReturnsRouteImport.update({
@@ -125,6 +132,11 @@ const OrdersIdRoute = OrdersIdRouteImport.update({
   path: '/orders/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JournalSlugRoute = JournalSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => JournalRoute,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -139,15 +151,17 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
-  '/journal': typeof JournalRoute
+  '/journal': typeof JournalRouteWithChildren
   '/our-story': typeof OurStoryRoute
   '/privacy': typeof PrivacyRoute
   '/returns': typeof ReturnsRoute
+  '/rewards': typeof RewardsRoute
   '/shipping': typeof ShippingRoute
   '/sustainability': typeof SustainabilityRoute
   '/terms': typeof TermsRoute
   '/wishlist': typeof WishlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/journal/$slug': typeof JournalSlugRoute
   '/orders/$id': typeof OrdersIdRoute
   '/product/$slug': typeof ProductSlugRoute
   '/shop/$category': typeof ShopCategoryRoute
@@ -161,15 +175,17 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
-  '/journal': typeof JournalRoute
+  '/journal': typeof JournalRouteWithChildren
   '/our-story': typeof OurStoryRoute
   '/privacy': typeof PrivacyRoute
   '/returns': typeof ReturnsRoute
+  '/rewards': typeof RewardsRoute
   '/shipping': typeof ShippingRoute
   '/sustainability': typeof SustainabilityRoute
   '/terms': typeof TermsRoute
   '/wishlist': typeof WishlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/journal/$slug': typeof JournalSlugRoute
   '/orders/$id': typeof OrdersIdRoute
   '/product/$slug': typeof ProductSlugRoute
   '/shop/$category': typeof ShopCategoryRoute
@@ -184,15 +200,17 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
-  '/journal': typeof JournalRoute
+  '/journal': typeof JournalRouteWithChildren
   '/our-story': typeof OurStoryRoute
   '/privacy': typeof PrivacyRoute
   '/returns': typeof ReturnsRoute
+  '/rewards': typeof RewardsRoute
   '/shipping': typeof ShippingRoute
   '/sustainability': typeof SustainabilityRoute
   '/terms': typeof TermsRoute
   '/wishlist': typeof WishlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/journal/$slug': typeof JournalSlugRoute
   '/orders/$id': typeof OrdersIdRoute
   '/product/$slug': typeof ProductSlugRoute
   '/shop/$category': typeof ShopCategoryRoute
@@ -212,11 +230,13 @@ export interface FileRouteTypes {
     | '/our-story'
     | '/privacy'
     | '/returns'
+    | '/rewards'
     | '/shipping'
     | '/sustainability'
     | '/terms'
     | '/wishlist'
     | '/api/chat'
+    | '/journal/$slug'
     | '/orders/$id'
     | '/product/$slug'
     | '/shop/$category'
@@ -234,11 +254,13 @@ export interface FileRouteTypes {
     | '/our-story'
     | '/privacy'
     | '/returns'
+    | '/rewards'
     | '/shipping'
     | '/sustainability'
     | '/terms'
     | '/wishlist'
     | '/api/chat'
+    | '/journal/$slug'
     | '/orders/$id'
     | '/product/$slug'
     | '/shop/$category'
@@ -256,11 +278,13 @@ export interface FileRouteTypes {
     | '/our-story'
     | '/privacy'
     | '/returns'
+    | '/rewards'
     | '/shipping'
     | '/sustainability'
     | '/terms'
     | '/wishlist'
     | '/api/chat'
+    | '/journal/$slug'
     | '/orders/$id'
     | '/product/$slug'
     | '/shop/$category'
@@ -275,10 +299,11 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
-  JournalRoute: typeof JournalRoute
+  JournalRoute: typeof JournalRouteWithChildren
   OurStoryRoute: typeof OurStoryRoute
   PrivacyRoute: typeof PrivacyRoute
   ReturnsRoute: typeof ReturnsRoute
+  RewardsRoute: typeof RewardsRoute
   ShippingRoute: typeof ShippingRoute
   SustainabilityRoute: typeof SustainabilityRoute
   TermsRoute: typeof TermsRoute
@@ -318,6 +343,13 @@ declare module '@tanstack/react-router' {
       path: '/shipping'
       fullPath: '/shipping'
       preLoaderRoute: typeof ShippingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rewards': {
+      id: '/rewards'
+      path: '/rewards'
+      fullPath: '/rewards'
+      preLoaderRoute: typeof RewardsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/returns': {
@@ -425,6 +457,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/journal/$slug': {
+      id: '/journal/$slug'
+      path: '/$slug'
+      fullPath: '/journal/$slug'
+      preLoaderRoute: typeof JournalSlugRouteImport
+      parentRoute: typeof JournalRoute
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -435,6 +474,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface JournalRouteChildren {
+  JournalSlugRoute: typeof JournalSlugRoute
+}
+
+const JournalRouteChildren: JournalRouteChildren = {
+  JournalSlugRoute: JournalSlugRoute,
+}
+
+const JournalRouteWithChildren =
+  JournalRoute._addFileChildren(JournalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccessibilityRoute: AccessibilityRoute,
@@ -443,10 +493,11 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
-  JournalRoute: JournalRoute,
+  JournalRoute: JournalRouteWithChildren,
   OurStoryRoute: OurStoryRoute,
   PrivacyRoute: PrivacyRoute,
   ReturnsRoute: ReturnsRoute,
+  RewardsRoute: RewardsRoute,
   ShippingRoute: ShippingRoute,
   SustainabilityRoute: SustainabilityRoute,
   TermsRoute: TermsRoute,
