@@ -97,8 +97,42 @@ function Checkout() {
       document.getElementById(firstInvalid)?.focus();
       return;
     }
+    // Deduct redeemed points (already redeemed via Apply button, no-op here)
+    // Award new points based on dollars spent (post-discount, pre-tax)
+    const dollarsForPoints = Math.max(0, subtotal - pointsDiscount);
+    const earned = rewards.award(dollarsForPoints);
+    setEarnedPoints(earned);
     clear();
     setDone(true);
+  };
+
+  const onApplyPoints = () => {
+    const n = Math.floor(Number(pointsInput));
+    if (!Number.isFinite(n) || n <= 0) {
+      setPointsMsg("Enter a number of points to apply.");
+      return;
+    }
+    if (n < REWARDS_CONSTANTS.MIN_REDEEM) {
+      setPointsMsg(`Minimum redemption is ${REWARDS_CONSTANTS.MIN_REDEEM} points.`);
+      return;
+    }
+    if (n > rewards.balance) {
+      setPointsMsg("You don't have that many points.");
+      return;
+    }
+    const maxBySubtotal = Math.floor(subtotal * REWARDS_CONSTANTS.POINTS_PER_DOLLAR);
+    if (n > maxBySubtotal) {
+      setPointsMsg(`You can apply up to ${maxBySubtotal.toLocaleString()} pts on this order.`);
+      return;
+    }
+    const res = rewards.redeem(n);
+    if (!res.ok) {
+      setPointsMsg("Couldn't redeem those points.");
+      return;
+    }
+    setPointsApplied(n);
+    setPointsMsg(null);
+    setPointsInput("");
   };
 
   if (done) {
@@ -108,8 +142,17 @@ function Checkout() {
           <CheckCircle2 className="mx-auto text-[color:var(--clay)]" size={48} />
           <h1 className="mt-6 font-display text-4xl">Order confirmed</h1>
           <p className="mt-3 text-muted-foreground">A receipt is on its way to your inbox. Track your order anytime from your account.</p>
+          {earnedPoints > 0 && (
+            <div className="mx-auto mt-8 inline-flex items-center gap-3 rounded-2xl border border-border bg-[color:var(--clay-soft)]/40 px-5 py-3">
+              <Award size={18} className="text-[color:var(--clay)]" />
+              <p className="text-sm">
+                You earned <span className="font-semibold">{earnedPoints.toLocaleString()} points</span> on this order.
+              </p>
+            </div>
+          )}
           <div className="mt-8 flex justify-center gap-3">
             <Link to="/account" className="rounded-full bg-foreground px-6 py-3 text-sm text-background">Track order</Link>
+            <Link to="/rewards" className="rounded-full border border-border px-6 py-3 text-sm">View rewards</Link>
             <Link to="/shop" className="rounded-full border border-border px-6 py-3 text-sm">Keep shopping</Link>
           </div>
         </div>
