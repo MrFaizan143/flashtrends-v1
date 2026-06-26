@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Shell } from "@/components/atlas/Shell";
-import { findArticle, relatedArticles, ARTICLES } from "@/lib/journal-articles";
+import { findArticle, relatedArticles, type Article } from "@/lib/journal-articles";
 import { useReveal } from "@/lib/use-reveal";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -17,18 +17,18 @@ export const Route = createFileRoute("/journal/$slug")({
       ],
     };
   },
-  loader: ({ params }) => {
-    const article = findArticle(params.slug);
-    if (!article) throw notFound();
-    return { article };
-  },
   component: ArticlePage,
 });
 
 function ArticlePage() {
-  const { article } = Route.useLoaderData();
-  const related = relatedArticles(article.slug, 3);
+  const { slug } = Route.useParams();
+  const article = findArticle(slug);
   const { ref, visible } = useReveal<HTMLDivElement>();
+  if (!article) {
+    throw notFound();
+  }
+  const a: Article = article;
+  const related = relatedArticles(a.slug, 3);
 
   return (
     <Shell>
