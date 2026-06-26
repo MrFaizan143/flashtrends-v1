@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/atlas/Shell";
-import { CheckCircle2, Package, Truck, ChevronRight } from "lucide-react";
+import { useRewards } from "@/lib/rewards-store";
+import { Award, CheckCircle2, Package, Truck, ChevronRight, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/account")({
   head: () => ({ meta: [{ title: "Account — FlashTrends" }, { name: "robots", content: "noindex" }] }),
@@ -16,6 +17,7 @@ const ORDERS = [
 ];
 
 function Account() {
+  const r = useRewards();
   return (
     <Shell>
       <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-10">
@@ -31,6 +33,7 @@ function Account() {
           <nav className="space-y-1 lg:sticky lg:top-24 lg:self-start">
             {[
               ["Orders", "/account"],
+              ["Rewards", "/rewards"],
               ["Wishlist", "/wishlist"],
               ["Addresses", "/account"],
               ["Payment methods", "/account"],
