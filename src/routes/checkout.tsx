@@ -297,10 +297,69 @@ function Checkout() {
                 <button type="button" className="rounded-full border border-border px-3 py-1.5 text-xs hover:border-foreground">Apply</button>
               </form>
 
+              {/* Rewards: apply points */}
+              <div className="mt-4 rounded-2xl border border-border bg-background/60 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[color:var(--clay)]">
+                    <Award size={12} /> Rewards
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {rewards.balance.toLocaleString()} pts · ${rewards.pointsToDollars(rewards.balance).toFixed(2)}
+                  </p>
+                </div>
+                {pointsApplied > 0 ? (
+                  <div className="mt-2 flex items-center justify-between gap-2 text-xs">
+                    <span>
+                      Applied <span className="font-medium">{pointsApplied.toLocaleString()} pts</span> · −${pointsDiscount.toFixed(2)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => { setPointsApplied(0); setPointsMsg(null); }}
+                      className="rounded-full border border-border px-2.5 py-1 text-[10px] hover:border-foreground"
+                    >Remove</button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="mt-2 flex items-center gap-2">
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        min={REWARDS_CONSTANTS.MIN_REDEEM}
+                        max={rewards.balance}
+                        step={50}
+                        value={pointsInput}
+                        onChange={(e) => setPointsInput(e.target.value)}
+                        placeholder={`Min ${REWARDS_CONSTANTS.MIN_REDEEM}`}
+                        aria-label="Points to apply"
+                        className="h-9 flex-1 rounded-full border border-border bg-background px-3 text-xs outline-none focus:border-foreground"
+                      />
+                      <button
+                        type="button"
+                        onClick={onApplyPoints}
+                        disabled={rewards.balance < REWARDS_CONSTANTS.MIN_REDEEM || subtotal === 0}
+                        className="rounded-full border border-border px-3 py-1.5 text-xs hover:border-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                      >Apply</button>
+                    </div>
+                    {pointsMsg && <p className="mt-1.5 text-[11px] text-[color:var(--clay)]">{pointsMsg}</p>}
+                    {!pointsMsg && (
+                      <p className="mt-1.5 text-[11px] text-muted-foreground">
+                        50 pts = $1 off. Min {REWARDS_CONSTANTS.MIN_REDEEM} pts.
+                      </p>
+                    )}
+                  </>
+                )}
+              </div>
+
               <dl className="mt-4 space-y-2 text-sm">
                 <Row label="Subtotal" value={formatPrice(subtotal)} />
-                <Row label={shipping === 0 ? "Shipping (free over $150)" : "Shipping"} value={shipping === 0 ? "Free" : formatPrice(shipping)} />
+                <Row label={silverPlus ? "Shipping (Silver perk)" : shipping === 0 ? "Shipping (free over $150)" : "Shipping"} value={shipping === 0 ? "Free" : formatPrice(shipping)} />
                 <Row label="Tax (est.)" value={formatPrice(tax)} />
+                {pointsApplied > 0 && (
+                  <div className="flex items-center justify-between text-[color:var(--clay)]">
+                    <dt>Points discount ({pointsApplied.toLocaleString()} pts)</dt>
+                    <dd className="tabular-nums">−{formatPrice(pointsDiscount)}</dd>
+                  </div>
+                )}
               </dl>
               <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">
                 <span className="text-sm">Total</span>
