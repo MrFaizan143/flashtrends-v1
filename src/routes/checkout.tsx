@@ -2,8 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState, type InputHTMLAttributes } from "react";
 import { Shell } from "@/components/atlas/Shell";
 import { useCart } from "@/lib/cart-store";
+import { useRewards, REWARDS_CONSTANTS } from "@/lib/rewards-store";
 import { formatPrice } from "@/lib/products";
-import { Apple, CheckCircle2, CreditCard, Lock, RotateCcw, ShieldCheck, Truck } from "lucide-react";
+import { Apple, Award, CheckCircle2, Lock, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Checkout — FlashTrends" }, { name: "robots", content: "noindex" }] }),
@@ -43,14 +44,23 @@ const validators: Record<string, (v: string) => string | undefined> = {
 
 function Checkout() {
   const { lines, subtotal, clear } = useCart();
+  const rewards = useRewards();
   const [done, setDone] = useState(false);
+  const [earnedPoints, setEarnedPoints] = useState(0);
   const [values, setValues] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<Errors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const shipping = subtotal > 150 || subtotal === 0 ? 0 : 9;
+  // Points redemption (Silver+ also gets free shipping)
+  const [pointsInput, setPointsInput] = useState<string>("");
+  const [pointsApplied, setPointsApplied] = useState(0);
+  const [pointsMsg, setPointsMsg] = useState<string | null>(null);
+
+  const silverPlus = rewards.tier === "Silver" || rewards.tier === "Gold";
+  const shipping = subtotal === 0 ? 0 : silverPlus || subtotal > 150 ? 0 : 9;
   const tax = +(subtotal * 0.08).toFixed(2);
-  const total = subtotal + shipping + tax;
+  const pointsDiscount = +(pointsApplied / REWARDS_CONSTANTS.POINTS_PER_DOLLAR).toFixed(2);
+  const total = Math.max(0, +(subtotal + shipping + tax - pointsDiscount).toFixed(2));
 
   const formValid = useMemo(() => {
     const fields = Object.keys(validators);
