@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles, Truck, RotateCcw, ShieldCheck } from "lucide-react";
+import { ArrowRight, Award, ChevronLeft, ChevronRight, Gift, Sparkles, Truck, RotateCcw, ShieldCheck } from "lucide-react";
 import { Shell } from "@/components/atlas/Shell";
 import { ProductCard } from "@/components/atlas/ProductCard";
 import { CATEGORIES, PRODUCTS, formatPrice } from "@/lib/products";
+import { ARTICLES } from "@/lib/journal-articles";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,7 +27,9 @@ function Home() {
       <Bento />
       <Bestsellers />
       <ValueProps />
+      <RewardsBanner />
       <UGCStrip />
+      <JournalTeaser />
       <EmailCapture />
     </Shell>
   );
