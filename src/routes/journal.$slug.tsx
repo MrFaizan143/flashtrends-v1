@@ -119,6 +119,3 @@ function ArticlePage() {
     </Shell>
   );
 }
-
-// Reference to ensure ARTICLES is tree-shaken correctly if needed
-void ARTICLES;
