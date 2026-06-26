@@ -60,6 +60,31 @@ function Account() {
               </div>
             </section>
 
+            <section
+              aria-label="Rewards summary"
+              className="overflow-hidden rounded-3xl border border-border bg-[color:var(--clay-soft)]/40 p-6 sm:p-8"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <span className="grid h-12 w-12 place-items-center rounded-full bg-[color:var(--clay)] text-[color:var(--accent-foreground)]">
+                    <Award size={18} />
+                  </span>
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{r.tier} tier · {r.multiplier}× points</p>
+                    <p className="mt-1 font-display text-2xl">
+                      {r.balance.toLocaleString()} pts <span className="text-sm text-muted-foreground">· ${r.pointsToDollars(r.balance).toFixed(2)} credit</span>
+                    </p>
+                    {r.nextTier && (
+                      <p className="mt-1 text-xs text-muted-foreground">{r.pointsToNext.toLocaleString()} pts to {r.nextTier}</p>
+                    )}
+                  </div>
+                </div>
+                <Link to="/rewards" className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-transform hover:scale-[1.02]">
+                  Manage rewards <ArrowRight size={14} />
+                </Link>
+              </div>
+            </section>
+
             <section>
               <h2 className="font-display text-2xl">Active order</h2>
               <div className="mt-4 overflow-hidden rounded-3xl border border-border bg-card">
