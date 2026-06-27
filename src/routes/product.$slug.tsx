@@ -1,13 +1,16 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Shell } from "@/components/atlas/Shell";
 import { ProductCard } from "@/components/atlas/ProductCard";
 import { Rating } from "@/components/atlas/Rating";
 import { findProduct, formatPrice, PRODUCTS, REVIEWS, RATING_DISTRIBUTION } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
+import { useMagnetic } from "@/lib/use-magnetic";
+import { flyToCart } from "@/lib/fly-to-cart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BadgeCheck, ChevronRight, Heart, Lock, Minus, Plus, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/product/$slug")({
   loader: ({ params }) => {
