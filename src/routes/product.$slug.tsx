@@ -70,8 +70,26 @@ function PDP() {
           {/* Sticky gallery */}
           <div>
             <div className="grid gap-3">
-              <div className="overflow-hidden rounded-3xl bg-secondary">
-                <img src={product.images[active]} alt={product.name} className="aspect-[4/5] w-full object-cover" />
+              <div
+                ref={galleryRef}
+                className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-secondary"
+              >
+                {product.images.map((src, i) => (
+                  <img
+                    key={src}
+                    src={src}
+                    alt={i === active ? product.name : ""}
+                    aria-hidden={i !== active}
+                    style={
+                      i === active
+                        ? { viewTransitionName: `product-${product.slug}` }
+                        : undefined
+                    }
+                    className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out ${
+                      i === active ? "opacity-100 ken-burns" : "opacity-0"
+                    }`}
+                  />
+                ))}
               </div>
               <div className="grid grid-cols-4 gap-3">
                 {product.images.map((src, i) => (
@@ -87,6 +105,7 @@ function PDP() {
               </div>
             </div>
           </div>
+
 
           {/* Info */}
           <div className="lg:sticky lg:top-24 lg:self-start">
