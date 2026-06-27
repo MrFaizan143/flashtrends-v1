@@ -283,11 +283,12 @@ function Bestsellers() {
         </div>
 
         <div ref={ref} className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:gap-6">
-          {items.map((p) => (
+          {items.map((p, i) => (
             <div key={p.id} className="w-[72%] shrink-0 snap-start sm:w-[44%] md:w-[30%] lg:w-[23%]">
-              <ProductCard product={p} />
+              <ProductCard product={p} index={i} />
             </div>
           ))}
+
         </div>
       </div>
     </section>
