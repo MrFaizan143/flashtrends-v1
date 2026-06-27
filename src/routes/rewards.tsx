@@ -44,6 +44,11 @@ function Rewards() {
 function StatusCard() {
   const r = useRewards();
   const { ref, visible } = useReveal<HTMLDivElement>();
+  const animBalance = useAnimatedNumber(r.balance, 700);
+  const animLifetime = useAnimatedNumber(r.lifetime, 700);
+  const animCredit = useAnimatedNumber(r.pointsToDollars(r.balance), 700);
+  const animToNext = useAnimatedNumber(r.pointsToNext, 700);
+
   return (
     <section
       ref={ref}
