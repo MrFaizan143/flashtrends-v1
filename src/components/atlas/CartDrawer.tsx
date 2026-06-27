@@ -4,6 +4,8 @@ import { formatPrice, PRODUCTS } from "@/lib/products";
 import { Lock, Minus, Plus, RotateCcw, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Progress } from "@/components/ui/progress";
+import { useAnimatedNumber } from "@/lib/use-animated-number";
+
 
 const FREE_SHIP_THRESHOLD = 150;
 
