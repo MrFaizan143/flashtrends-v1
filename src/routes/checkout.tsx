@@ -255,12 +255,14 @@ function Checkout() {
 
             <div>
               <button
+                ref={payBtnRef}
                 type="submit"
                 disabled={lines.length === 0}
-                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-transform hover:scale-[1.005] disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-transform hover:scale-[1.005] disabled:cursor-not-allowed disabled:opacity-50 will-change-transform"
               >
-                <Lock size={14} /> Pay {formatPrice(total)}
+                <Lock size={14} /> Pay <span className="tabular-nums">{formatPrice(animatedTotal)}</span>
               </button>
+
               {!formValid && Object.keys(touched).length > 0 && (
                 <p className="mt-2 text-center text-xs text-[color:var(--clay)]">Please fix the highlighted fields above.</p>
               )}
