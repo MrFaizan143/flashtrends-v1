@@ -41,9 +41,11 @@
   --color-ring: var(--ring);
   --color-clay: var(--clay);
   --color-clay-soft: var(--clay-soft);
+  --color-spark: var(--spark);
   --color-ink: var(--ink);
   --color-cloud: var(--cloud);
   --color-sand: var(--sand);
+
 
   --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.04), 0 8px 24px -12px oklch(0 0 0 / 0.08);
   --shadow-lift: 0 2px 4px oklch(0 0 0 / 0.04), 0 16px 40px -16px oklch(0 0 0 / 0.12);
