@@ -127,6 +127,38 @@ function Hero() {
   );
 }
 
+function AsymmetricHeroCard() {
+  const hero = PRODUCTS[0];
+  return (
+    <div
+      className="hero-step pointer-events-none absolute right-2 top-[58%] z-20 hidden -translate-y-1/2 sm:right-4 md:block lg:right-8"
+      style={{ animationDelay: "1000ms" }}
+    >
+      <Link
+        to="/product/$slug"
+        params={{ slug: hero.slug }}
+        className="pointer-events-auto group block w-[230px] origin-bottom-right rotate-[3.5deg] overflow-hidden rounded-2xl bg-background shadow-lift ring-1 ring-black/5 backdrop-blur transition-transform duration-500 hover:rotate-0 hover:-translate-y-1 lg:w-[260px]"
+      >
+        <div className="aspect-[4/5] overflow-hidden">
+          <img
+            src={hero.images[0]}
+            alt={hero.name}
+            className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
+          />
+        </div>
+        <div className="flex items-center justify-between gap-3 px-4 py-3">
+          <div className="min-w-0">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--clay)]">This week's hero</p>
+            <p className="mt-0.5 truncate font-display text-sm text-foreground">{hero.name}</p>
+          </div>
+          <span className="shrink-0 font-display text-sm text-foreground">{formatPrice(hero.price)}</span>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
+
 function Marquee() {
   const items = ["Free shipping over $150", "60-day returns", "Carbon-neutral delivery", "Hand-picked by editors", "Verified reviews only"];
   return (
