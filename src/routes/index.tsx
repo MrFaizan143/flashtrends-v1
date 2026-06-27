@@ -134,6 +134,21 @@ function Hero() {
   );
 }
 
+function MagneticCTA() {
+  const ref = useMagnetic<HTMLAnchorElement>(60, 0.22);
+  return (
+    <Link
+      ref={ref}
+      to="/shop"
+      className="group inline-flex items-center gap-2 rounded-full bg-[color:var(--clay)] px-6 py-3.5 text-sm font-medium text-[color:var(--accent-foreground)] transition-transform hover:scale-[1.02] will-change-transform"
+    >
+      Browse the edit
+      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+    </Link>
+  );
+}
+
+
 function AsymmetricHeroCard() {
   const hero = PRODUCTS[0];
   return (
