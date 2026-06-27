@@ -371,7 +371,7 @@ function Checkout() {
               </dl>
               <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">
                 <span className="text-sm">Total</span>
-                <span className="font-display text-2xl tabular-nums">{formatPrice(total)}</span>
+                <span className="font-display text-2xl tabular-nums">{formatPrice(animatedTotal)}</span>
               </div>
 
               <div className="mt-5 space-y-2 border-t border-border pt-4 text-xs text-muted-foreground">
