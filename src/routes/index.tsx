@@ -83,25 +83,39 @@ function Hero() {
         })}
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/55" />
 
-        <div className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-end px-4 pb-16 sm:px-6 sm:pb-20 lg:px-10 lg:pb-28">
-          <p className="reveal text-xs uppercase tracking-[0.32em] text-white/80">Fall edition · 2026</p>
-          <h1 className="reveal mt-4 max-w-4xl text-balance font-display text-5xl font-light leading-[0.95] text-white sm:text-7xl lg:text-[7rem]" style={{ animationDelay: "0.08s" }}>
-            Considered things,<br />
+        <div className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-end px-4 pb-20 sm:px-6 sm:pb-24 lg:px-10 lg:pb-32">
+          <p className="hero-step text-[11px] uppercase tracking-[0.34em] text-white/85" style={{ animationDelay: "0ms" }}>
+            Fall edition · 2026
+          </p>
+          <h1
+            className="hero-step mt-5 -ml-1 max-w-[1100px] text-balance font-display font-light leading-[0.88] text-white sm:-ml-2 lg:-ml-4"
+            style={{
+              animationDelay: "180ms",
+              fontSize: "clamp(3.25rem, 11vw, 11rem)",
+              letterSpacing: "-0.035em",
+            }}
+          >
+            <span className="hero-glint" style={{ color: "#fff" }}>Considered things,</span>
+            <br />
             <em className="font-normal italic text-[color:var(--clay-soft)]">made to outlast trends.</em>
           </h1>
-          <p className="reveal mt-6 max-w-xl text-pretty text-base text-white/85 sm:text-lg" style={{ animationDelay: "0.16s" }}>
-            One curated marketplace. Five categories. Goods worth keeping — from heirloom outerwear to clean skincare and tools built to last decades.
+          <p className="hero-step mt-7 max-w-xl text-pretty text-base text-white/85 sm:text-lg" style={{ animationDelay: "520ms" }}>
+            One address for fashion, beauty, electronics, home and lifestyle — vetted by editors, made to keep.
           </p>
-          <div className="reveal mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: "0.24s" }}>
+          <div className="hero-step mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: "1700ms" }}>
             <Link to="/shop" className="group inline-flex items-center gap-2 rounded-full bg-[color:var(--clay)] px-6 py-3.5 text-sm font-medium text-[color:var(--accent-foreground)] transition-transform hover:scale-[1.02]">
-              Shop the edit
+              Browse the edit
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </Link>
             <Link to="/shop/$category" params={{ category: "home" }} className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-6 py-3.5 text-sm font-medium text-white backdrop-blur transition hover:bg-white/20">
-              Explore home
+              Inside the home edit
             </Link>
           </div>
         </div>
+
+        {/* Asymmetric break: small product card overlaps gradient on the right edge */}
+        <AsymmetricHeroCard />
+
 
         <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5">
           {[0, 1, 2].map((i) => (
