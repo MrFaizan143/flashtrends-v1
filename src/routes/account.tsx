@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/atlas/Shell";
 import { useRewards } from "@/lib/rewards-store";
+import { useAnimatedNumber } from "@/lib/use-animated-number";
 import { Award, CheckCircle2, Package, Truck, ChevronRight, ArrowRight } from "lucide-react";
+
 
 export const Route = createFileRoute("/account")({
   head: () => ({ meta: [{ title: "Account — FlashTrends" }, { name: "robots", content: "noindex" }] }),
