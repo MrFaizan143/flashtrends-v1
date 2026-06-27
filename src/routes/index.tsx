@@ -6,6 +6,8 @@ import { ProductCard } from "@/components/atlas/ProductCard";
 import { TrendingTicker } from "@/components/atlas/TrendingTicker";
 import { CATEGORIES, PRODUCTS, formatPrice } from "@/lib/products";
 import { ARTICLES } from "@/lib/journal-articles";
+import { useMagnetic } from "@/lib/use-magnetic";
+
 
 
 export const Route = createFileRoute("/")({
