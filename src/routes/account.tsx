@@ -20,6 +20,9 @@ const ORDERS = [
 
 function Account() {
   const r = useRewards();
+  const animBalance = useAnimatedNumber(r.balance, 600);
+  const animCredit = useAnimatedNumber(r.pointsToDollars(r.balance), 600);
+
   return (
     <Shell>
       <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-10">
