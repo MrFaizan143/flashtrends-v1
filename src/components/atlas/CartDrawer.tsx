@@ -92,7 +92,7 @@ export function CartDrawer() {
           <div className="border-t border-border bg-background px-6 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Subtotal</span>
-              <span className="font-display text-xl">{formatPrice(subtotal)}</span>
+              <span className="font-display text-xl tabular-nums">{formatPrice(animatedSubtotal)}</span>
             </div>
             <p className="mt-1 text-xs text-muted-foreground">Tax and shipping calculated at checkout</p>
             <Link
@@ -100,8 +100,9 @@ export function CartDrawer() {
               onClick={() => setOpen(false)}
               className="mt-4 flex h-12 w-full items-center justify-center gap-1.5 rounded-full bg-foreground text-sm font-medium text-background transition-transform hover:scale-[1.01]"
             >
-              <Lock size={13} /> Secure checkout · {formatPrice(subtotal)}
+              <Lock size={13} /> Secure checkout · <span className="tabular-nums">{formatPrice(animatedSubtotal)}</span>
             </Link>
+
             <div className="mt-3 flex items-center justify-center gap-4 text-[11px] text-muted-foreground">
               <span className="inline-flex items-center gap-1"><RotateCcw size={11} /> Free 60-day returns</span>
               <span className="inline-flex items-center gap-1">256-bit SSL · Encrypted</span>
