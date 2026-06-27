@@ -90,6 +90,8 @@
   --ink:   oklch(0.97 0.005 80);
   --clay:  oklch(0.68 0.14 40);
   --clay-soft: oklch(0.32 0.06 40);
+  --spark: oklch(0.82 0.18 70);
+
 
   --background: oklch(0.08 0.005 60);       /* true near-black */
   --foreground: oklch(0.97 0.005 80);
