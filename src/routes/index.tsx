@@ -6,6 +6,8 @@ import { ProductCard } from "@/components/atlas/ProductCard";
 import { TrendingTicker } from "@/components/atlas/TrendingTicker";
 import { CATEGORIES, PRODUCTS, formatPrice } from "@/lib/products";
 import { ARTICLES } from "@/lib/journal-articles";
+import { useMagnetic } from "@/lib/use-magnetic";
+
 
 
 export const Route = createFileRoute("/")({
@@ -63,6 +65,8 @@ function Hero() {
     "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1800&q=80",
   ];
 
+  const reduced = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const parallaxY = reduced ? 0 : progress * 60; // images drift slower than scroll
   return (
     <section ref={ref} className="relative" style={{ height: "220vh" }} aria-label="Featured story">
       <div className="sticky top-0 h-dvh w-full overflow-hidden">
@@ -76,12 +80,17 @@ function Hero() {
               src={src}
               alt=""
               aria-hidden={i !== 0}
-              className="absolute inset-0 h-full w-full object-cover"
-              style={{ opacity, transform: `scale(${1.04 - opacity * 0.04})`, transition: "opacity 200ms linear, transform 600ms ease-out" }}
+              className="absolute inset-0 h-full w-full object-cover will-change-transform"
+              style={{
+                opacity,
+                transform: `translate3d(0, ${parallaxY}px, 0) scale(${1.08 - opacity * 0.04})`,
+                transition: "opacity 200ms linear",
+              }}
             />
           );
         })}
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/55" />
+
 
         <div className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-end px-4 pb-20 sm:px-6 sm:pb-24 lg:px-10 lg:pb-32">
           <p className="hero-step text-[11px] uppercase tracking-[0.34em] text-white/85" style={{ animationDelay: "0ms" }}>
@@ -103,10 +112,8 @@ function Hero() {
             One address for fashion, beauty, electronics, home and lifestyle — vetted by editors, made to keep.
           </p>
           <div className="hero-step mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: "1700ms" }}>
-            <Link to="/shop" className="group inline-flex items-center gap-2 rounded-full bg-[color:var(--clay)] px-6 py-3.5 text-sm font-medium text-[color:var(--accent-foreground)] transition-transform hover:scale-[1.02]">
-              Browse the edit
-              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </Link>
+            <MagneticCTA />
+
             <Link to="/shop/$category" params={{ category: "home" }} className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-6 py-3.5 text-sm font-medium text-white backdrop-blur transition hover:bg-white/20">
               Inside the home edit
             </Link>
@@ -126,6 +133,21 @@ function Hero() {
     </section>
   );
 }
+
+function MagneticCTA() {
+  const ref = useMagnetic<HTMLAnchorElement>(60, 0.22);
+  return (
+    <Link
+      ref={ref}
+      to="/shop"
+      className="group inline-flex items-center gap-2 rounded-full bg-[color:var(--clay)] px-6 py-3.5 text-sm font-medium text-[color:var(--accent-foreground)] transition-transform hover:scale-[1.02] will-change-transform"
+    >
+      Browse the edit
+      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+    </Link>
+  );
+}
+
 
 function AsymmetricHeroCard() {
   const hero = PRODUCTS[0];
@@ -261,11 +283,12 @@ function Bestsellers() {
         </div>
 
         <div ref={ref} className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:gap-6">
-          {items.map((p) => (
+          {items.map((p, i) => (
             <div key={p.id} className="w-[72%] shrink-0 snap-start sm:w-[44%] md:w-[30%] lg:w-[23%]">
-              <ProductCard product={p} />
+              <ProductCard product={p} index={i} />
             </div>
           ))}
+
         </div>
       </div>
     </section>

@@ -1,13 +1,16 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Shell } from "@/components/atlas/Shell";
 import { ProductCard } from "@/components/atlas/ProductCard";
 import { Rating } from "@/components/atlas/Rating";
 import { findProduct, formatPrice, PRODUCTS, REVIEWS, RATING_DISTRIBUTION } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
+import { useMagnetic } from "@/lib/use-magnetic";
+import { flyToCart } from "@/lib/fly-to-cart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BadgeCheck, ChevronRight, Heart, Lock, Minus, Plus, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/product/$slug")({
   loader: ({ params }) => {
@@ -36,16 +39,20 @@ function PDP() {
   const [variant, setVariant] = useState<string | undefined>(product.variants?.options[0]);
   const [qty, setQty] = useState(1);
   const [active, setActive] = useState(0);
+  const galleryRef = useRef<HTMLDivElement | null>(null);
+  const buyBtnRef = useMagnetic<HTMLButtonElement>(60, 0.22);
 
   const related = PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
   const fbt = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
   const fbtTotal = fbt.reduce((s, p) => s + p.price, product.price);
 
   const addToCart = () => {
+    flyToCart({ src: product.images[active], from: galleryRef.current });
     add(product, variant, qty);
     setOpen(true);
     toast.success(`${product.name} added to cart`);
   };
+
 
   return (
     <Shell>
@@ -63,8 +70,26 @@ function PDP() {
           {/* Sticky gallery */}
           <div>
             <div className="grid gap-3">
-              <div className="overflow-hidden rounded-3xl bg-secondary">
-                <img src={product.images[active]} alt={product.name} className="aspect-[4/5] w-full object-cover" />
+              <div
+                ref={galleryRef}
+                className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-secondary"
+              >
+                {product.images.map((src, i) => (
+                  <img
+                    key={src}
+                    src={src}
+                    alt={i === active ? product.name : ""}
+                    aria-hidden={i !== active}
+                    style={
+                      i === active
+                        ? { viewTransitionName: `product-${product.slug}` }
+                        : undefined
+                    }
+                    className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out ${
+                      i === active ? "opacity-100 ken-burns" : "opacity-0"
+                    }`}
+                  />
+                ))}
               </div>
               <div className="grid grid-cols-4 gap-3">
                 {product.images.map((src, i) => (
@@ -80,6 +105,7 @@ function PDP() {
               </div>
             </div>
           </div>
+
 
           {/* Info */}
           <div className="lg:sticky lg:top-24 lg:self-start">
@@ -140,11 +166,13 @@ function PDP() {
                 <button onClick={() => setQty(qty + 1)} aria-label="Increase" className="grid h-12 w-12 place-items-center"><Plus size={16} /></button>
               </div>
               <button
+                ref={buyBtnRef}
                 onClick={addToCart}
-                className="flex-1 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-transform hover:scale-[1.01]"
+                className="flex-1 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-transform hover:scale-[1.01] will-change-transform"
               >
                 Add to bag · {formatPrice(product.price * qty)}
               </button>
+
               <button aria-label="Add to wishlist" className="grid h-12 w-12 place-items-center rounded-full border border-border hover:border-foreground">
                 <Heart size={16} />
               </button>
@@ -250,7 +278,7 @@ function PDP() {
         <section className="mt-24 border-t border-border pt-16">
           <h2 className="font-display text-2xl sm:text-3xl">You may also like</h2>
           <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-4">
-            {related.map((p) => <ProductCard key={p.id} product={p} />)}
+            {related.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
           </div>
         </section>
       </div>

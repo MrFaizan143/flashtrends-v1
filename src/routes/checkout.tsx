@@ -3,8 +3,11 @@ import { useMemo, useState, type InputHTMLAttributes } from "react";
 import { Shell } from "@/components/atlas/Shell";
 import { useCart } from "@/lib/cart-store";
 import { useRewards, REWARDS_CONSTANTS } from "@/lib/rewards-store";
+import { useAnimatedNumber } from "@/lib/use-animated-number";
+import { useMagnetic } from "@/lib/use-magnetic";
 import { formatPrice } from "@/lib/products";
 import { Apple, Award, CheckCircle2, Lock, RotateCcw, ShieldCheck, Truck } from "lucide-react";
+
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Checkout — FlashTrends" }, { name: "robots", content: "noindex" }] }),
@@ -61,6 +64,9 @@ function Checkout() {
   const tax = +(subtotal * 0.08).toFixed(2);
   const pointsDiscount = +(pointsApplied / REWARDS_CONSTANTS.POINTS_PER_DOLLAR).toFixed(2);
   const total = Math.max(0, +(subtotal + shipping + tax - pointsDiscount).toFixed(2));
+  const animatedTotal = useAnimatedNumber(total, 550);
+  const payBtnRef = useMagnetic<HTMLButtonElement>(60, 0.22);
+
 
   const formValid = useMemo(() => {
     const fields = Object.keys(validators);
@@ -249,12 +255,14 @@ function Checkout() {
 
             <div>
               <button
+                ref={payBtnRef}
                 type="submit"
                 disabled={lines.length === 0}
-                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-transform hover:scale-[1.005] disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-transform hover:scale-[1.005] disabled:cursor-not-allowed disabled:opacity-50 will-change-transform"
               >
-                <Lock size={14} /> Pay {formatPrice(total)}
+                <Lock size={14} /> Pay <span className="tabular-nums">{formatPrice(animatedTotal)}</span>
               </button>
+
               {!formValid && Object.keys(touched).length > 0 && (
                 <p className="mt-2 text-center text-xs text-[color:var(--clay)]">Please fix the highlighted fields above.</p>
               )}
@@ -363,7 +371,7 @@ function Checkout() {
               </dl>
               <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">
                 <span className="text-sm">Total</span>
-                <span className="font-display text-2xl tabular-nums">{formatPrice(total)}</span>
+                <span className="font-display text-2xl tabular-nums">{formatPrice(animatedTotal)}</span>
               </div>
 
               <div className="mt-5 space-y-2 border-t border-border pt-4 text-xs text-muted-foreground">

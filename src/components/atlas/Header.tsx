@@ -1,9 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search, ShoppingBag, Heart, User, Menu, X, Sun, Moon } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { useTheme } from "@/lib/theme";
 import { CATEGORIES } from "@/lib/products";
+import { registerCartIcon } from "@/lib/fly-to-cart";
+
 
 export function Header() {
   const { count, setOpen, bump } = useCart();
@@ -11,7 +13,14 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [bumping, setBumping] = useState(false);
+  const iconRef = useRef<HTMLSpanElement | null>(null);
   const path = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    registerCartIcon(iconRef.current);
+    return () => registerCartIcon(null);
+  }, []);
+
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -77,9 +86,13 @@ export function Header() {
             aria-label={`Cart (${count} items)`}
             className="relative inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-secondary"
           >
-            <span className={bumping ? "animate-cart-bump inline-flex" : "inline-flex"}>
+            <span
+              ref={iconRef}
+              className={`inline-flex ${bumping ? "animate-cart-bump" : ""}`}
+            >
               <ShoppingBag size={18} />
             </span>
+
             {count > 0 && (
               <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-[color:var(--clay)] px-1 text-[10px] font-semibold text-[color:var(--accent-foreground)]">
                 {count}

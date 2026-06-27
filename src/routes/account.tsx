@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/atlas/Shell";
 import { useRewards } from "@/lib/rewards-store";
+import { useAnimatedNumber } from "@/lib/use-animated-number";
 import { Award, CheckCircle2, Package, Truck, ChevronRight, ArrowRight } from "lucide-react";
+
 
 export const Route = createFileRoute("/account")({
   head: () => ({ meta: [{ title: "Account — FlashTrends" }, { name: "robots", content: "noindex" }] }),
@@ -18,6 +20,9 @@ const ORDERS = [
 
 function Account() {
   const r = useRewards();
+  const animBalance = useAnimatedNumber(r.balance, 600);
+  const animCredit = useAnimatedNumber(r.pointsToDollars(r.balance), 600);
+
   return (
     <Shell>
       <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-10">
@@ -71,9 +76,10 @@ function Account() {
                   </span>
                   <div>
                     <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{r.tier} tier · {r.multiplier}× points</p>
-                    <p className="mt-1 font-display text-2xl">
-                      {r.balance.toLocaleString()} pts <span className="text-sm text-muted-foreground">· ${r.pointsToDollars(r.balance).toFixed(2)} credit</span>
+                    <p className="mt-1 font-display text-2xl tabular-nums">
+                      {Math.round(animBalance).toLocaleString()} pts <span className="text-sm text-muted-foreground">· ${animCredit.toFixed(2)} credit</span>
                     </p>
+
                     {r.nextTier && (
                       <p className="mt-1 text-xs text-muted-foreground">{r.pointsToNext.toLocaleString()} pts to {r.nextTier}</p>
                     )}
