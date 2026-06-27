@@ -3,8 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Award, ChevronLeft, ChevronRight, Gift, Sparkles, Truck, RotateCcw, ShieldCheck } from "lucide-react";
 import { Shell } from "@/components/atlas/Shell";
 import { ProductCard } from "@/components/atlas/ProductCard";
+import { TrendingTicker } from "@/components/atlas/TrendingTicker";
 import { CATEGORIES, PRODUCTS, formatPrice } from "@/lib/products";
 import { ARTICLES } from "@/lib/journal-articles";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
