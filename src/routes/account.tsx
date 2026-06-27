@@ -76,9 +76,10 @@ function Account() {
                   </span>
                   <div>
                     <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{r.tier} tier · {r.multiplier}× points</p>
-                    <p className="mt-1 font-display text-2xl">
-                      {r.balance.toLocaleString()} pts <span className="text-sm text-muted-foreground">· ${r.pointsToDollars(r.balance).toFixed(2)} credit</span>
+                    <p className="mt-1 font-display text-2xl tabular-nums">
+                      {Math.round(animBalance).toLocaleString()} pts <span className="text-sm text-muted-foreground">· ${animCredit.toFixed(2)} credit</span>
                     </p>
+
                     {r.nextTier && (
                       <p className="mt-1 text-xs text-muted-foreground">{r.pointsToNext.toLocaleString()} pts to {r.nextTier}</p>
                     )}
