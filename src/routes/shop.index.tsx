@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/atlas/Shell";
 import { ProductListing } from "@/components/atlas/ProductListing";
+import { TrendingTicker } from "@/components/atlas/TrendingTicker";
 import { PRODUCTS } from "@/lib/products";
 
 export const Route = createFileRoute("/shop/")({
@@ -12,7 +13,8 @@ export const Route = createFileRoute("/shop/")({
   }),
   component: () => (
     <Shell>
-      <ProductListing title="Shop everything" subtitle="The full FlashTrends edit" products={PRODUCTS} />
+      <TrendingTicker />
+      <ProductListing title="The full edit" subtitle="Everything in one address" products={PRODUCTS} />
     </Shell>
   ),
 });

@@ -127,10 +127,11 @@ function PDP() {
                 <span className={`absolute inset-0 animate-ping rounded-full opacity-60 ${product.stock < 10 ? "bg-[color:var(--clay)]" : "bg-emerald-600"}`} />
               </span>
               <span className={product.stock < 10 ? "font-medium text-[color:var(--clay)]" : "text-foreground"}>
-                {product.stock < 10 ? `Only ${product.stock} left — selling fast` : "In stock"}
+                {product.stock < 10 ? `Only ${product.stock} left` : "In stock"}
               </span>
-              <span className="text-muted-foreground">· Ships today if ordered by 3pm</span>
+              <span className="text-muted-foreground">· Ships today on orders before 3pm</span>
             </div>
+
 
             <div className="mt-6 flex items-stretch gap-3">
               <div className="inline-flex items-center rounded-full border border-border">
