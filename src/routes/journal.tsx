@@ -34,18 +34,15 @@ function Journal() {
   );
 }
 
-function ArticleCard({ article: a }: { article: Article }) {
+function ArticleCard({ article: a, index = 0 }: { article: Article; index?: number }) {
   const { ref, visible } = useReveal<HTMLElement>();
   return (
     <article
       ref={ref}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(14px)",
-        transition: "opacity 600ms cubic-bezier(0.2,0.7,0.2,1), transform 600ms cubic-bezier(0.2,0.7,0.2,1)",
-      }}
+      style={staggerStyle(visible, index)}
       className="group"
     >
+
       <Link to="/journal/$slug" params={{ slug: a.slug }} className="block">
         <div className="overflow-hidden rounded-2xl bg-secondary">
           <img src={a.image} alt={a.title} loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105" />
