@@ -58,6 +58,8 @@
   --ink:   oklch(0.18 0.012 60);           /* near-black, warm */
   --clay:  oklch(0.58 0.135 38);           /* terracotta accent */
   --clay-soft: oklch(0.92 0.04 45);
+  /* RESERVED — signature only (ticker + hero glint). Do not reuse. */
+  --spark: oklch(0.76 0.19 65);            /* hot amber/ember */
 
   --background: var(--cloud);
   --foreground: var(--ink);
@@ -79,6 +81,7 @@
   --input: oklch(0.92 0.01 70);
   --ring: var(--clay);
 }
+
 
 .dark {
   /* OLED-friendly near black */
