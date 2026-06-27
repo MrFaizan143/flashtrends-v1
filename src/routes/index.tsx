@@ -24,6 +24,7 @@ export const Route = createFileRoute("/")({
 function Home() {
   return (
     <Shell>
+      <TrendingTicker />
       <Hero />
       <Marquee />
       <Bento />
@@ -36,6 +37,7 @@ function Home() {
     </Shell>
   );
 }
+
 
 function Hero() {
   const ref = useRef<HTMLDivElement | null>(null);
