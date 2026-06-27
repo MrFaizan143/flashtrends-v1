@@ -86,8 +86,9 @@ function StatusCard() {
                 />
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
-                <span className="font-medium text-foreground">{r.pointsToNext.toLocaleString()} pts</span> to {r.nextTier}
+                <span className="font-medium text-foreground tabular-nums">{Math.round(animToNext).toLocaleString()} pts</span> to {r.nextTier}
               </p>
+
             </div>
           ) : (
             <p className="mt-7 text-sm text-[color:var(--clay)]">You're at our top tier. Thank you.</p>
