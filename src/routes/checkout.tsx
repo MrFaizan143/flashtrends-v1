@@ -64,6 +64,9 @@ function Checkout() {
   const tax = +(subtotal * 0.08).toFixed(2);
   const pointsDiscount = +(pointsApplied / REWARDS_CONSTANTS.POINTS_PER_DOLLAR).toFixed(2);
   const total = Math.max(0, +(subtotal + shipping + tax - pointsDiscount).toFixed(2));
+  const animatedTotal = useAnimatedNumber(total, 550);
+  const payBtnRef = useMagnetic<HTMLButtonElement>(60, 0.22);
+
 
   const formValid = useMemo(() => {
     const fields = Object.keys(validators);
