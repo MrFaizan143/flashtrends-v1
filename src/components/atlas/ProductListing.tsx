@@ -138,7 +138,7 @@ export function ProductListing({
           ) : (
             <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3">
               {filtered.map((p, i) => (
-                <ProductCard key={p.id} product={p} priority={i < 4} />
+                <ProductCard key={p.id} product={p} priority={i < 4} index={i} />
               ))}
             </div>
           )}
