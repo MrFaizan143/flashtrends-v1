@@ -1,9 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search, ShoppingBag, Heart, User, Menu, X, Sun, Moon } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { useTheme } from "@/lib/theme";
 import { CATEGORIES } from "@/lib/products";
+import { registerCartIcon } from "@/lib/fly-to-cart";
+
 
 export function Header() {
   const { count, setOpen, bump } = useCart();
