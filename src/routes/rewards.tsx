@@ -4,6 +4,8 @@ import { Shell } from "@/components/atlas/Shell";
 import { PageIntro } from "@/components/atlas/PageIntro";
 import { useRewards, REWARDS_CONSTANTS, type Tier } from "@/lib/rewards-store";
 import { useReveal } from "@/lib/use-reveal";
+import { useAnimatedNumber } from "@/lib/use-animated-number";
+
 import { toast } from "sonner";
 import { Award, Check, Copy, Gift, Sparkles, TrendingUp } from "lucide-react";
 
