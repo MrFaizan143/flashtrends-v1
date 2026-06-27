@@ -3,8 +3,11 @@ import { useMemo, useState, type InputHTMLAttributes } from "react";
 import { Shell } from "@/components/atlas/Shell";
 import { useCart } from "@/lib/cart-store";
 import { useRewards, REWARDS_CONSTANTS } from "@/lib/rewards-store";
+import { useAnimatedNumber } from "@/lib/use-animated-number";
+import { useMagnetic } from "@/lib/use-magnetic";
 import { formatPrice } from "@/lib/products";
 import { Apple, Award, CheckCircle2, Lock, RotateCcw, ShieldCheck, Truck } from "lucide-react";
+
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Checkout — FlashTrends" }, { name: "robots", content: "noindex" }] }),
