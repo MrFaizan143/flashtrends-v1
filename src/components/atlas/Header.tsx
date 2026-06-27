@@ -13,7 +13,14 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [bumping, setBumping] = useState(false);
+  const iconRef = useRef<HTMLSpanElement | null>(null);
   const path = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    registerCartIcon(iconRef.current);
+    return () => registerCartIcon(null);
+  }, []);
+
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
