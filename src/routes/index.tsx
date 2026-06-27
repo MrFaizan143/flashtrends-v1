@@ -63,6 +63,8 @@ function Hero() {
     "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1800&q=80",
   ];
 
+  const reduced = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const parallaxY = reduced ? 0 : progress * 60; // images drift slower than scroll
   return (
     <section ref={ref} className="relative" style={{ height: "220vh" }} aria-label="Featured story">
       <div className="sticky top-0 h-dvh w-full overflow-hidden">
@@ -76,12 +78,17 @@ function Hero() {
               src={src}
               alt=""
               aria-hidden={i !== 0}
-              className="absolute inset-0 h-full w-full object-cover"
-              style={{ opacity, transform: `scale(${1.04 - opacity * 0.04})`, transition: "opacity 200ms linear, transform 600ms ease-out" }}
+              className="absolute inset-0 h-full w-full object-cover will-change-transform"
+              style={{
+                opacity,
+                transform: `translate3d(0, ${parallaxY}px, 0) scale(${1.08 - opacity * 0.04})`,
+                transition: "opacity 200ms linear",
+              }}
             />
           );
         })}
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/55" />
+
 
         <div className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-end px-4 pb-20 sm:px-6 sm:pb-24 lg:px-10 lg:pb-32">
           <p className="hero-step text-[11px] uppercase tracking-[0.34em] text-white/85" style={{ animationDelay: "0ms" }}>
