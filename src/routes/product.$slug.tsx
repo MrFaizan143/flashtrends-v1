@@ -166,11 +166,13 @@ function PDP() {
                 <button onClick={() => setQty(qty + 1)} aria-label="Increase" className="grid h-12 w-12 place-items-center"><Plus size={16} /></button>
               </div>
               <button
+                ref={buyBtnRef}
                 onClick={addToCart}
-                className="flex-1 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-transform hover:scale-[1.01]"
+                className="flex-1 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-transform hover:scale-[1.01] will-change-transform"
               >
                 Add to bag · {formatPrice(product.price * qty)}
               </button>
+
               <button aria-label="Add to wishlist" className="grid h-12 w-12 place-items-center rounded-full border border-border hover:border-foreground">
                 <Heart size={16} />
               </button>
