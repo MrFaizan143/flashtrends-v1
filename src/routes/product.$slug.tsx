@@ -39,16 +39,20 @@ function PDP() {
   const [variant, setVariant] = useState<string | undefined>(product.variants?.options[0]);
   const [qty, setQty] = useState(1);
   const [active, setActive] = useState(0);
+  const galleryRef = useRef<HTMLDivElement | null>(null);
+  const buyBtnRef = useMagnetic<HTMLButtonElement>(60, 0.22);
 
   const related = PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
   const fbt = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
   const fbtTotal = fbt.reduce((s, p) => s + p.price, product.price);
 
   const addToCart = () => {
+    flyToCart({ src: product.images[active], from: galleryRef.current });
     add(product, variant, qty);
     setOpen(true);
     toast.success(`${product.name} added to cart`);
   };
+
 
   return (
     <Shell>
