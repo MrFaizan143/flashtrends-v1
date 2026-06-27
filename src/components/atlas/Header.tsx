@@ -86,9 +86,13 @@ export function Header() {
             aria-label={`Cart (${count} items)`}
             className="relative inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-secondary"
           >
-            <span className={bumping ? "animate-cart-bump inline-flex" : "inline-flex"}>
+            <span
+              ref={iconRef}
+              className={`inline-flex ${bumping ? "animate-cart-bump" : ""}`}
+            >
               <ShoppingBag size={18} />
             </span>
+
             {count > 0 && (
               <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-[color:var(--clay)] px-1 text-[10px] font-semibold text-[color:var(--accent-foreground)]">
                 {count}
