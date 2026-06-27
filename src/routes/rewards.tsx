@@ -66,11 +66,12 @@ function StatusCard() {
             <span className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Current tier</span>
           </div>
           <p className="mt-5 font-display text-5xl font-light tabular-nums sm:text-6xl">
-            {r.balance.toLocaleString()} <span className="text-xl text-muted-foreground">pts</span>
+            {Math.round(animBalance).toLocaleString()} <span className="text-xl text-muted-foreground">pts</span>
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Worth <span className="font-medium text-foreground">${r.pointsToDollars(r.balance).toFixed(2)}</span> in credit · {r.lifetime.toLocaleString()} lifetime
+            Worth <span className="font-medium text-foreground tabular-nums">${animCredit.toFixed(2)}</span> in credit · <span className="tabular-nums">{Math.round(animLifetime).toLocaleString()}</span> lifetime
           </p>
+
 
           {r.nextTier ? (
             <div className="mt-7 max-w-md">
