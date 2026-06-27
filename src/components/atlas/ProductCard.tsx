@@ -1,35 +1,46 @@
 import { Link } from "@tanstack/react-router";
+import { useRef } from "react";
 import { Heart, Plus } from "lucide-react";
 import type { Product } from "@/lib/products";
 import { formatPrice } from "@/lib/products";
 import { Rating } from "./Rating";
 import { useCart } from "@/lib/cart-store";
 import { useWishlist } from "@/lib/wishlist-store";
-import { useReveal } from "@/lib/use-reveal";
+import { useReveal, staggerStyle } from "@/lib/use-reveal";
+import { flyToCart } from "@/lib/fly-to-cart";
 import { toast } from "sonner";
 
-export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
+export function ProductCard({
+  product,
+  priority = false,
+  index = 0,
+}: {
+  product: Product;
+  priority?: boolean;
+  /** Position in a grid — used to stagger the reveal cascade. */
+  index?: number;
+}) {
   const { add, setOpen } = useCart();
   const { has, toggle } = useWishlist();
   const saved = has(product.id);
   const { ref, visible } = useReveal<HTMLAnchorElement>();
+  const imgRef = useRef<HTMLImageElement | null>(null);
+
   return (
     <Link
       ref={ref}
       to="/product/$slug"
       params={{ slug: product.slug }}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(14px)",
-        transition: "opacity 600ms cubic-bezier(0.2,0.7,0.2,1), transform 600ms cubic-bezier(0.2,0.7,0.2,1)",
-      }}
+      style={staggerStyle(visible, index)}
       className="group relative block"
     >
-      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-secondary">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-secondary shadow-soft">
         <img
+          ref={imgRef}
           src={product.images[0]}
           alt={product.name}
           loading={priority ? "eager" : "lazy"}
+          style={{ viewTransitionName: `product-${product.slug}` }}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
         />
         {product.images[1] && (
@@ -68,6 +79,8 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           type="button"
           onClick={(e) => {
             e.preventDefault();
+            const btn = e.currentTarget;
+            flyToCart({ src: product.images[0], from: btn });
             add(product);
             setOpen(true);
             toast.success(`${product.name} added to cart`);
