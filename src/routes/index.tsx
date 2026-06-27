@@ -112,10 +112,8 @@ function Hero() {
             One address for fashion, beauty, electronics, home and lifestyle — vetted by editors, made to keep.
           </p>
           <div className="hero-step mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: "1700ms" }}>
-            <Link to="/shop" className="group inline-flex items-center gap-2 rounded-full bg-[color:var(--clay)] px-6 py-3.5 text-sm font-medium text-[color:var(--accent-foreground)] transition-transform hover:scale-[1.02]">
-              Browse the edit
-              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </Link>
+            <MagneticCTA />
+
             <Link to="/shop/$category" params={{ category: "home" }} className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-6 py-3.5 text-sm font-medium text-white backdrop-blur transition hover:bg-white/20">
               Inside the home edit
             </Link>
