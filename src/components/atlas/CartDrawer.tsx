@@ -5,6 +5,7 @@ import { Lock, Minus, Plus, RotateCcw, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Progress } from "@/components/ui/progress";
 import { useAnimatedNumber } from "@/lib/use-animated-number";
+import { EmptyState } from "./EmptyState";
 
 
 const FREE_SHIP_THRESHOLD = 150;
