@@ -17,17 +17,23 @@ import { RewardsProvider } from "../lib/rewards-store";
 import { ThemeProvider } from "../lib/theme";
 import { Toaster } from "../components/ui/sonner";
 import { Concierge } from "../components/atlas/Concierge";
+import { EmptyState } from "../components/atlas/EmptyState";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <p className="font-display text-sm uppercase tracking-[0.3em] text-muted-foreground">flashtrends</p>
-        <h1 className="mt-4 font-display text-7xl font-light text-foreground">404</h1>
-        <p className="mt-3 text-muted-foreground">This page wandered off the map.</p>
-        <Link to="/" className="mt-6 inline-flex items-center justify-center rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-transform hover:scale-[1.02]">
-          Return home
-        </Link>
+    <div className="flex min-h-dvh items-center justify-center bg-background px-4 py-16">
+      <div className="w-full max-w-lg">
+        <EmptyState
+          icon="compass"
+          eyebrow="404 · off the map"
+          title="This page wandered off"
+          description="The link may be old or the page may have moved. Let's get you back to something good."
+          action={
+            <Link to="/" className="inline-flex items-center justify-center rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-transform hover:scale-[1.02]">
+              Return home
+            </Link>
+          }
+        />
       </div>
     </div>
   );
