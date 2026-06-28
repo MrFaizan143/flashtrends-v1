@@ -131,10 +131,18 @@ export function ProductListing({
           </div>
 
           {filtered.length === 0 ? (
-            <div className="mt-16 rounded-3xl border border-dashed border-border p-16 text-center">
-              <p className="font-display text-2xl">Nothing here, yet</p>
-              <p className="mt-2 text-sm text-muted-foreground">Try clearing a filter or browsing another category.</p>
-              <button onClick={() => { setCats([]); setPriceMax(1000); setInStock(false); }} className="mt-6 rounded-full bg-foreground px-6 py-3 text-sm text-background">Clear filters</button>
+            <div className="mt-10">
+              <EmptyState
+                icon="search"
+                eyebrow="Nothing matched"
+                title="No pieces here, yet"
+                description="Try clearing a filter or browsing another category — there's plenty more to see."
+                action={
+                  <button onClick={() => { setCats([]); setPriceMax(1000); setInStock(false); }} className="rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-transform hover:scale-[1.02]">
+                    Clear filters
+                  </button>
+                }
+              />
             </div>
           ) : (
             <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3">
