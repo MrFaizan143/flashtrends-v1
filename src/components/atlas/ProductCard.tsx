@@ -41,7 +41,7 @@ export function ProductCard({
           alt={product.name}
           loading={priority ? "eager" : "lazy"}
           style={{ viewTransitionName: `product-${product.slug}` }}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
+          className="warm-grade absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
         />
         {product.images[1] && (
           <img
@@ -49,7 +49,7 @@ export function ProductCard({
             alt=""
             aria-hidden
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 pointer-fine:group-hover:opacity-100"
+            className="warm-grade absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 pointer-fine:group-hover:opacity-100"
           />
         )}
         {product.badges?.[0] && (
