@@ -285,7 +285,7 @@ function PDP() {
       </div>
 
       {/* Sticky mobile add-to-cart */}
-      <div className="sticky bottom-0 z-30 border-t border-border bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur lg:hidden">
+      <div className="sticky bottom-0 z-30 border-t border-border bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur md:hidden">
         <button onClick={addToCart} className="flex h-12 w-full items-center justify-center rounded-full bg-foreground text-sm font-medium text-background">
           Add to bag · {formatPrice(product.price * qty)}
         </button>
