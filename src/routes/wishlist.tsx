@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/atlas/Shell";
 import { ProductCard } from "@/components/atlas/ProductCard";
+import { EmptyState } from "@/components/atlas/EmptyState";
 import { PRODUCTS } from "@/lib/products";
 import { useWishlist } from "@/lib/wishlist-store";
-import { Heart } from "lucide-react";
 
 export const Route = createFileRoute("/wishlist")({
   head: () => ({ meta: [{ title: "Wishlist — FlashTrends" }, { name: "robots", content: "noindex" }] }),
