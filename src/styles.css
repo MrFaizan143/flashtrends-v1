@@ -160,6 +160,23 @@
 }
 @utility animate-cart-bump { animation: cart-bump 0.5s ease-out; }
 
+/* === Photography cohesion: unified warm color grade ===
+ * Subtle, consistent grade applied to every product + lifestyle photo
+ * so mixed stock imagery reads as one shoot. No posterization.
+ * Available as the .warm-grade utility AND auto-applied to <img> sitewide
+ * (the site has no <img>-based logos/icons — lucide ships SVG).
+ */
+@utility warm-grade {
+  filter: saturate(0.93) sepia(0.045) contrast(1.015) brightness(1.005);
+}
+img {
+  filter: saturate(0.93) sepia(0.045) contrast(1.015) brightness(1.005);
+}
+.dark .warm-grade,
+.dark img {
+  filter: saturate(0.9) sepia(0.05) contrast(1.02) brightness(0.985);
+}
+
 /* === Signature: trending ticker marquee === */
 @keyframes ft-marquee {
   from { transform: translate3d(0, 0, 0); }

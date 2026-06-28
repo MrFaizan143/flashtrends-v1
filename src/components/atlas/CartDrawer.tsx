@@ -5,6 +5,7 @@ import { Lock, Minus, Plus, RotateCcw, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Progress } from "@/components/ui/progress";
 import { useAnimatedNumber } from "@/lib/use-animated-number";
+import { EmptyState } from "./EmptyState";
 
 
 const FREE_SHIP_THRESHOLD = 150;
@@ -35,11 +36,18 @@ export function CartDrawer() {
         </SheetHeader>
 
         {lines.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-            <p className="font-display text-2xl text-foreground">Your bag is empty</p>
-            <p className="mt-2 max-w-xs text-sm text-muted-foreground">Browse the latest arrivals and pieces our editors are loving.</p>
-            <Link to="/shop" onClick={() => setOpen(false)} className="mt-6 rounded-full bg-foreground px-6 py-3 text-sm text-background">Shop now</Link>
-          </div>
+          <EmptyState
+            compact
+            icon="bag"
+            title="Your bag is empty"
+            description="Browse the latest arrivals and pieces our editors are loving."
+            action={
+              <Link to="/shop" onClick={() => setOpen(false)} className="rounded-full bg-foreground px-6 py-3 text-sm text-background transition-transform hover:scale-[1.02]">
+                Start browsing
+              </Link>
+            }
+            className="flex-1"
+          />
         ) : (
           <div className="flex-1 overflow-y-auto px-6 py-4">
             <ul className="divide-y divide-border">
