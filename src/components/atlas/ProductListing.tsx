@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { ProductCard } from "./ProductCard";
+import { EmptyState } from "./EmptyState";
 import type { Product } from "@/lib/products";
 import { CATEGORIES } from "@/lib/products";
 import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
