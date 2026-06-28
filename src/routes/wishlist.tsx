@@ -33,17 +33,18 @@ function Wishlist() {
         </div>
 
         {items.length === 0 ? (
-          <div className="mt-16 flex flex-col items-center justify-center rounded-3xl border border-dashed border-border bg-secondary/30 px-6 py-20 text-center">
-            <div className="grid h-14 w-14 place-items-center rounded-full bg-background text-[color:var(--clay)]">
-              <Heart size={22} />
-            </div>
-            <h2 className="mt-5 font-display text-2xl">No favorites yet</h2>
-            <p className="mt-2 max-w-md text-sm text-muted-foreground">
-              Tap the heart on any product to save it here. We'll keep it ready for when you're ready.
-            </p>
-            <Link to="/shop" className="mt-7 inline-flex items-center justify-center rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-transform hover:scale-[1.02]">
-              Start browsing
-            </Link>
+          <div className="mt-12">
+            <EmptyState
+              icon="heart"
+              eyebrow="Nothing saved yet"
+              title="Your wishlist is waiting"
+              description="Tap the heart on any piece to save it here — we'll keep it ready for when you are."
+              action={
+                <Link to="/shop" className="inline-flex items-center justify-center rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-transform hover:scale-[1.02]">
+                  Start browsing
+                </Link>
+              }
+            />
           </div>
         ) : (
           <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-4">
