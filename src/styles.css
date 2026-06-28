@@ -3,6 +3,9 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+/* Device-class variants: touch = no hover (mobile/tablet), pointer-fine = mouse/trackpad. */
+@custom-variant touch (@media (hover: none));
+@custom-variant pointer-fine (@media (hover: hover) and (pointer: fine));
 
 /* ATLAS DESIGN SYSTEM
  * Warm minimal premium e-commerce. Cloud neutral base, terracotta accent.

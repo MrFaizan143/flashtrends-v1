@@ -187,7 +187,7 @@ export function Concierge() {
         onClick={() => setOpen((v) => !v)}
         className={cn(
           "fixed z-40 flex size-14 items-center justify-center rounded-full bg-clay text-[oklch(0.99_0.005_80)] shadow-[0_10px_30px_-10px_oklch(0.58_0.135_38_/_0.55)] transition-all duration-200 motion-reduce:transition-none",
-          "right-4 bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] sm:right-5 lg:bottom-6",
+          "right-4 bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] sm:right-5 md:bottom-6",
           "hover:scale-105 active:scale-95 motion-reduce:hover:scale-100",
           open && "scale-90 opacity-0 pointer-events-none",
         )}
@@ -221,6 +221,8 @@ export function Concierge() {
               "animate-in slide-in-from-bottom-4 duration-200 motion-reduce:animate-none",
             )}
           >
+            {/* Mobile drag-handle affordance */}
+            <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-border lg:hidden" aria-hidden />
             {/* Header */}
             <header className="flex items-center justify-between border-b border-border px-5 py-4">
               <div className="flex items-center gap-2.5">

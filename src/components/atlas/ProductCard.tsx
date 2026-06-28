@@ -49,7 +49,7 @@ export function ProductCard({
             alt=""
             aria-hidden
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 pointer-fine:group-hover:opacity-100"
           />
         )}
         {product.badges?.[0] && (
@@ -71,10 +71,11 @@ export function ProductCard({
           }}
           aria-label={saved ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
           aria-pressed={saved}
-          className={`absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full backdrop-blur transition-all ${saved ? "bg-[color:var(--clay)] text-[color:var(--accent-foreground)]" : "bg-background/80 text-foreground hover:bg-background"} ${product.compareAt ? "top-12" : ""}`}
+          className={`absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-full backdrop-blur transition-all ${saved ? "bg-[color:var(--clay)] text-[color:var(--accent-foreground)]" : "bg-background/80 text-foreground hover:bg-background"} ${product.compareAt ? "top-12" : ""}`}
         >
           <Heart size={15} fill={saved ? "currentColor" : "none"} />
         </button>
+        {/* Quick add — desktop reveals on hover, touch shows persistently in thumb-zone */}
         <button
           type="button"
           onClick={(e) => {
@@ -86,7 +87,7 @@ export function ProductCard({
             toast.success(`${product.name} added to cart`);
           }}
           aria-label={`Quick add ${product.name}`}
-          className="absolute bottom-3 right-3 inline-flex h-10 w-10 translate-y-2 items-center justify-center rounded-full bg-foreground text-background opacity-0 shadow-soft transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 hover:scale-110 focus-visible:translate-y-0 focus-visible:opacity-100"
+          className="absolute bottom-3 right-3 inline-flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background shadow-soft transition-all duration-300 hover:scale-110 focus-visible:translate-y-0 focus-visible:opacity-100 pointer-fine:translate-y-2 pointer-fine:opacity-0 pointer-fine:group-hover:translate-y-0 pointer-fine:group-hover:opacity-100"
         >
           <Plus size={18} />
         </button>

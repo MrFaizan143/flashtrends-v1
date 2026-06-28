@@ -66,13 +66,14 @@ function PDP() {
           <span className="text-foreground">{product.name}</span>
         </nav>
 
-        <div className="mt-6 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+        <div className="mt-6 grid gap-10 md:grid-cols-[1.1fr_1fr] md:gap-10 lg:gap-16">
           {/* Sticky gallery */}
           <div>
             <div className="grid gap-3">
+              {/* Mobile: swipeable horizontal gallery with snap. Desktop: stacked crossfade hero. */}
               <div
                 ref={galleryRef}
-                className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-secondary"
+                className="relative -mx-4 flex aspect-[4/5] snap-x snap-mandatory overflow-x-auto sm:mx-0 sm:overflow-hidden sm:rounded-3xl no-scrollbar bg-secondary md:block"
               >
                 {product.images.map((src, i) => (
                   <img
@@ -85,13 +86,13 @@ function PDP() {
                         ? { viewTransitionName: `product-${product.slug}` }
                         : undefined
                     }
-                    className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out ${
-                      i === active ? "opacity-100 ken-burns" : "opacity-0"
+                    className={`h-full w-full shrink-0 snap-center object-cover sm:absolute sm:inset-0 sm:transition-opacity sm:duration-500 sm:ease-out ${
+                      i === active ? "sm:opacity-100 sm:ken-burns" : "sm:opacity-0"
                     }`}
                   />
                 ))}
               </div>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-4 gap-3 px-4 sm:px-0">
                 {product.images.map((src, i) => (
                   <button
                     key={src}
@@ -108,7 +109,7 @@ function PDP() {
 
 
           {/* Info */}
-          <div className="lg:sticky lg:top-24 lg:self-start">
+          <div className="md:sticky md:top-24 md:self-start">
             <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{product.brand}</p>
             <h1 className="mt-2 font-display text-3xl font-light leading-tight sm:text-4xl">{product.name}</h1>
             <p className="mt-2 text-base text-muted-foreground">{product.tagline}</p>
@@ -284,7 +285,7 @@ function PDP() {
       </div>
 
       {/* Sticky mobile add-to-cart */}
-      <div className="sticky bottom-0 z-30 border-t border-border bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur lg:hidden">
+      <div className="sticky bottom-0 z-30 border-t border-border bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur md:hidden">
         <button onClick={addToCart} className="flex h-12 w-full items-center justify-center rounded-full bg-foreground text-sm font-medium text-background">
           Add to bag · {formatPrice(product.price * qty)}
         </button>
