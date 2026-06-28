@@ -221,6 +221,8 @@ export function Concierge() {
               "animate-in slide-in-from-bottom-4 duration-200 motion-reduce:animate-none",
             )}
           >
+            {/* Mobile drag-handle affordance */}
+            <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-border lg:hidden" aria-hidden />
             {/* Header */}
             <header className="flex items-center justify-between border-b border-border px-5 py-4">
               <div className="flex items-center gap-2.5">
