@@ -4,13 +4,13 @@ import { LayoutDashboard, Package, ShoppingBag, BookOpen, Settings, LogOut } fro
 import { useIsAdmin } from "@/lib/use-admin";
 import { supabase } from "@/integrations/supabase/client";
 
-const NAV = [
+const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/products", label: "Products", icon: Package },
   { to: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { to: "/admin/journal", label: "Journal", icon: BookOpen },
   { to: "/admin/settings", label: "Settings", icon: Settings },
-] as const;
+];
 
 export function AdminShell({ children, title }: { children: ReactNode; title: string }) {
   const { user, isAdmin, loading } = useIsAdmin();
