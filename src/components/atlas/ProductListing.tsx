@@ -5,6 +5,7 @@ import type { Product } from "@/lib/products";
 import { CATEGORIES } from "@/lib/products";
 import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Sort = "featured" | "price-asc" | "price-desc" | "rating" | "newest";
 
@@ -13,12 +14,15 @@ export function ProductListing({
   subtitle,
   products,
   showCategoryFilter = true,
+  loading = false,
 }: {
   title: string;
   subtitle?: string;
   products: Product[];
   showCategoryFilter?: boolean;
+  loading?: boolean;
 }) {
+
   const [sort, setSort] = useState<Sort>("featured");
   const [cats, setCats] = useState<string[]>([]);
   const [priceMax, setPriceMax] = useState<number>(1000);
