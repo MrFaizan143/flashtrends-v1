@@ -2,7 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/atlas/Shell";
 import { PageIntro } from "@/components/atlas/PageIntro";
 import { useReveal, staggerStyle } from "@/lib/use-reveal";
-import { ARTICLES, type Article } from "@/lib/journal-articles";
+import { type Article } from "@/lib/journal-articles";
+import { useArticles } from "@/lib/storefront";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export const Route = createFileRoute("/journal")({
@@ -17,6 +19,7 @@ export const Route = createFileRoute("/journal")({
 });
 
 function Journal() {
+  const { data: articles, isLoading } = useArticles();
   return (
     <Shell>
       <div className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
@@ -27,12 +30,23 @@ function Journal() {
         />
 
         <div className="mt-14 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {ARTICLES.map((a, i) => <ArticleCard key={a.slug} article={a} index={i} />)}
+          {isLoading
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <div key={i}>
+                  <Skeleton className="aspect-[4/3] w-full rounded-2xl" />
+                  <Skeleton className="mt-4 h-3 w-24" />
+                  <Skeleton className="mt-3 h-6 w-3/4" />
+                </div>
+              ))
+            : (articles ?? []).map((a: Article, i: number) => (
+                <ArticleCard key={a.slug} article={a} index={i} />
+              ))}
         </div>
       </div>
     </Shell>
   );
 }
+
 
 function ArticleCard({ article: a, index = 0 }: { article: Article; index?: number }) {
   const { ref, visible } = useReveal<HTMLElement>();

@@ -1,49 +1,77 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { Shell } from "@/components/atlas/Shell";
 import { ProductCard } from "@/components/atlas/ProductCard";
 import { Rating } from "@/components/atlas/Rating";
-import { findProduct, formatPrice, PRODUCTS, REVIEWS, RATING_DISTRIBUTION } from "@/lib/products";
+import { formatPrice, RATING_DISTRIBUTION, type Product } from "@/lib/products";
+import { useProductBySlug } from "@/lib/storefront";
 import { useCart } from "@/lib/cart-store";
 import { useMagnetic } from "@/lib/use-magnetic";
 import { flyToCart } from "@/lib/fly-to-cart";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BadgeCheck, ChevronRight, Heart, Lock, Minus, Plus, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { toast } from "sonner";
 
 
 export const Route = createFileRoute("/product/$slug")({
-  loader: ({ params }) => {
-    const p = findProduct(params.slug);
-    if (!p) throw notFound();
-    return { product: p };
-  },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: loaderData ? `${loaderData.product.name} — FlashTrends` : "Product" },
-      { name: "description", content: loaderData?.product.description ?? "" },
-      { property: "og:title", content: loaderData?.product.name },
-      { property: "og:description", content: loaderData?.product.description ?? "" },
-      { property: "og:image", content: loaderData?.product.images[0] },
-    ],
+  head: ({ params }) => ({
+    meta: [{ title: `${params.slug} — FlashTrends` }],
   }),
   notFoundComponent: () => <Shell><div className="mx-auto max-w-xl px-4 py-32 text-center"><h1 className="font-display text-4xl">Product not found</h1></div></Shell>,
   errorComponent: ({ reset }) => <Shell><div className="mx-auto max-w-xl px-4 py-32 text-center"><h1 className="font-display text-3xl">Something went wrong</h1><button onClick={reset} className="mt-4 rounded-full bg-foreground px-5 py-2.5 text-sm text-background">Retry</button></div></Shell>,
   component: PDP,
 });
 
+function PDPSkeleton() {
+  return (
+    <Shell>
+      <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 lg:px-10">
+        <div className="grid gap-10 md:grid-cols-[1.1fr_1fr] md:gap-16">
+          <Skeleton className="aspect-[4/5] w-full rounded-3xl" />
+          <div className="space-y-4">
+            <Skeleton className="h-3 w-32" />
+            <Skeleton className="h-10 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="mt-6 h-8 w-32" />
+            <Skeleton className="mt-6 h-12 w-full" />
+          </div>
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
 function PDP() {
-  const data = Route.useLoaderData() as { product: import("@/lib/products").Product };
-  const { product } = data;
+  const { slug } = Route.useParams();
+  const { data, isLoading } = useProductBySlug(slug);
   const { add, setOpen } = useCart();
-  const [variant, setVariant] = useState<string | undefined>(product.variants?.options[0]);
-  const [qty, setQty] = useState(1);
-  const [active, setActive] = useState(0);
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const buyBtnRef = useMagnetic<HTMLButtonElement>(60, 0.22);
+  // Variant selector — sourced from product_variants table via `data.variants`.
+  const dbVariants = data?.variants ?? [];
+  const productVariants: Product["variants"] | undefined = dbVariants.length
+    ? { label: dbVariants[0].name, options: dbVariants.map((v) => v.value) }
+    : undefined;
+  const [variant, setVariant] = useState<string | undefined>(dbVariants[0]?.value);
 
-  const related = PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
-  const fbt = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
+  const [qty, setQty] = useState(1);
+  const [active, setActive] = useState(0);
+
+  if (isLoading) return <PDPSkeleton />;
+  if (!data) {
+    return (
+      <Shell>
+        <div className="mx-auto max-w-xl px-4 py-32 text-center">
+          <h1 className="font-display text-4xl">Product not found</h1>
+          <Link to="/shop" className="mt-6 inline-block underline">Back to shop</Link>
+        </div>
+      </Shell>
+    );
+  }
+
+  const { product, reviews, related } = data;
+  const fbt = related.slice(0, 3);
   const fbtTotal = fbt.reduce((s, p) => s + p.price, product.price);
 
   const addToCart = () => {
@@ -52,6 +80,8 @@ function PDP() {
     setOpen(true);
     toast.success(`${product.name} added to cart`);
   };
+
+
 
 
   return (
@@ -129,14 +159,14 @@ function PDP() {
             </div>
             <p className="mt-1 text-xs text-muted-foreground">Tax included. Shipping calculated at checkout.</p>
 
-            {product.variants && (
+            {productVariants && (
               <div className="mt-8">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium">{product.variants.label}: <span className="text-muted-foreground">{variant}</span></p>
+                  <p className="text-sm font-medium">{productVariants.label}: <span className="text-muted-foreground">{variant}</span></p>
                   <button className="text-xs text-muted-foreground underline">Size guide</button>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {product.variants.options.map((o) => (
+                  {productVariants.options.map((o) => (
                     <button
                       key={o}
                       onClick={() => setVariant(o)}
@@ -148,6 +178,7 @@ function PDP() {
                 </div>
               </div>
             )}
+
 
             <div className="mt-6 flex items-center gap-2 text-xs">
               <span className={`relative inline-flex h-2 w-2 rounded-full ${product.stock < 10 ? "bg-[color:var(--clay)]" : "bg-emerald-600"}`}>
@@ -234,17 +265,21 @@ function PDP() {
                   </ul>
                 </div>
                 <ul className="mt-8 space-y-6">
-                  {REVIEWS.map((r) => (
+                  {reviews.length === 0 && (
+                    <li className="text-sm text-muted-foreground">No reviews yet — be the first.</li>
+                  )}
+                  {reviews.map((r) => (
                     <li key={r.id} className="border-t border-border pt-5">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2"><Rating value={r.rating} /><p className="text-sm font-medium">{r.title}</p></div>
-                        <span className="text-xs text-muted-foreground">{r.date}</span>
+                        <div className="flex items-center gap-2"><Rating value={r.rating} /><p className="text-sm font-medium">{r.title ?? ""}</p></div>
+                        <span className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</span>
                       </div>
                       <p className="mt-2 text-sm text-muted-foreground">{r.body}</p>
-                      <p className="mt-2 text-xs text-muted-foreground">{r.author}{r.verified && " · Verified buyer"}</p>
+                      <p className="mt-2 text-xs text-muted-foreground">{r.author_name}{r.verified_purchase && " · Verified buyer"}</p>
                     </li>
                   ))}
                 </ul>
+
               </TabsContent>
             </Tabs>
           </div>

@@ -1,34 +1,50 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/atlas/Shell";
-import { findArticle, relatedArticles, type Article } from "@/lib/journal-articles";
+import { type Article } from "@/lib/journal-articles";
+import { useArticle } from "@/lib/storefront";
 import { useReveal } from "@/lib/use-reveal";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/journal/$slug")({
-  head: ({ params }) => {
-    const a = findArticle(params.slug);
-    return {
-      meta: [
-        { title: a ? `${a.title} — FlashTrends Journal` : "Journal — FlashTrends" },
-        { name: "description", content: a?.excerpt ?? "Field notes from FlashTrends." },
-        { property: "og:title", content: a?.title ?? "FlashTrends Journal" },
-        { property: "og:description", content: a?.excerpt ?? "" },
-        { property: "og:image", content: a?.image ?? "" },
-      ],
-    };
-  },
+  head: ({ params }) => ({
+    meta: [{ title: `${params.slug} — FlashTrends Journal` }],
+  }),
   component: ArticlePage,
 });
 
 function ArticlePage() {
   const { slug } = Route.useParams();
-  const article = findArticle(slug);
+  const { data, isLoading } = useArticle(slug);
   const { ref, visible } = useReveal<HTMLDivElement>();
-  if (!article) {
-    throw notFound();
+
+  if (isLoading) {
+    return (
+      <Shell>
+        <div className="mx-auto max-w-[820px] px-4 py-16 sm:px-6">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="mt-4 h-14 w-full" />
+          <Skeleton className="mt-8 aspect-[16/9] w-full rounded-3xl" />
+          <Skeleton className="mt-8 h-4 w-full" />
+          <Skeleton className="mt-2 h-4 w-5/6" />
+        </div>
+      </Shell>
+    );
   }
-  const a: Article = article;
-  const related = relatedArticles(a.slug, 3);
+  if (!data) {
+    return (
+      <Shell>
+        <div className="mx-auto max-w-xl px-4 py-32 text-center">
+          <h1 className="font-display text-4xl">Article not found</h1>
+          <Link to="/journal" className="mt-6 inline-block underline">Back to Journal</Link>
+        </div>
+      </Shell>
+    );
+  }
+  const article: Article = data.article;
+  const a = article;
+  const related = data.related;
+
 
   return (
     <Shell>

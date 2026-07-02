@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/atlas/Shell";
 import { ProductListing } from "@/components/atlas/ProductListing";
 import { TrendingTicker } from "@/components/atlas/TrendingTicker";
-import { PRODUCTS } from "@/lib/products";
+import { useProducts } from "@/lib/storefront";
 
 export const Route = createFileRoute("/shop/")({
   head: () => ({
@@ -11,10 +11,20 @@ export const Route = createFileRoute("/shop/")({
       { name: "description", content: "Browse all curated goods across fashion, beauty, electronics, home and lifestyle." },
     ],
   }),
-  component: () => (
+  component: ShopIndex,
+});
+
+function ShopIndex() {
+  const { data, isLoading } = useProducts();
+  return (
     <Shell>
       <TrendingTicker />
-      <ProductListing title="The full edit" subtitle="Everything in one address" products={PRODUCTS} />
+      <ProductListing
+        title="The full edit"
+        subtitle="Everything in one address"
+        products={data ?? []}
+        loading={isLoading}
+      />
     </Shell>
-  ),
-});
+  );
+}
