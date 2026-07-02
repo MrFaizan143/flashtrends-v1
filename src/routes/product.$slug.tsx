@@ -48,10 +48,13 @@ function PDP() {
   const { add, setOpen } = useCart();
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const buyBtnRef = useMagnetic<HTMLButtonElement>(60, 0.22);
-  // Static variants shim (product_variants table exists but is empty in seed);
-  // keep a soft fallback so UI still renders variant selector when present.
-  const productVariants: Product["variants"] | undefined = undefined;
-  const [variant, setVariant] = useState<string | undefined>(productVariants?.options[0]);
+  // Variant selector — sourced from product_variants table via `data.variants`.
+  const dbVariants = data?.variants ?? [];
+  const productVariants: Product["variants"] | undefined = dbVariants.length
+    ? { label: dbVariants[0].name, options: dbVariants.map((v) => v.value) }
+    : undefined;
+  const [variant, setVariant] = useState<string | undefined>(dbVariants[0]?.value);
+
   const [qty, setQty] = useState(1);
   const [active, setActive] = useState(0);
 
