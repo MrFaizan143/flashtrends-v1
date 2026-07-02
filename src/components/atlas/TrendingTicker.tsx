@@ -1,26 +1,25 @@
 import { Flame } from "lucide-react";
+import { useTickerSettings } from "@/lib/storefront";
 
-const TRENDS = [
+const FALLBACK = [
   "Linen",
   "Quiet luxury",
   "Studio lighting",
   "Cashmere",
   "Minimal tech",
   "Terracotta home",
-  "Heirloom denim",
-  "Clean skincare",
-  "Stoneware",
-  "Sculptural lamps",
-  "Wide-leg tailoring",
-  "Field jackets",
 ];
 
 /**
  * Signature element: a slow, seamless trending strip.
- * Uses the reserved --spark accent (nowhere else in the UI).
+ * Phrases come from `site_settings.trending_ticker` in the database and can
+ * be edited from the admin panel.
  */
 export function TrendingTicker({ className = "" }: { className?: string }) {
-  const loop = [...TRENDS, ...TRENDS];
+  const { data } = useTickerSettings();
+  const phrases = data?.phrases?.length ? data.phrases : FALLBACK;
+  const loop = [...phrases, ...phrases];
+
   return (
     <div
       className={`relative border-b border-border bg-foreground text-background ${className}`}
