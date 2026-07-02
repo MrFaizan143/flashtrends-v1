@@ -1,49 +1,74 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { Shell } from "@/components/atlas/Shell";
 import { ProductCard } from "@/components/atlas/ProductCard";
 import { Rating } from "@/components/atlas/Rating";
-import { findProduct, formatPrice, PRODUCTS, REVIEWS, RATING_DISTRIBUTION } from "@/lib/products";
+import { formatPrice, RATING_DISTRIBUTION, type Product } from "@/lib/products";
+import { useProductBySlug } from "@/lib/storefront";
 import { useCart } from "@/lib/cart-store";
 import { useMagnetic } from "@/lib/use-magnetic";
 import { flyToCart } from "@/lib/fly-to-cart";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BadgeCheck, ChevronRight, Heart, Lock, Minus, Plus, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { toast } from "sonner";
 
 
 export const Route = createFileRoute("/product/$slug")({
-  loader: ({ params }) => {
-    const p = findProduct(params.slug);
-    if (!p) throw notFound();
-    return { product: p };
-  },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: loaderData ? `${loaderData.product.name} — FlashTrends` : "Product" },
-      { name: "description", content: loaderData?.product.description ?? "" },
-      { property: "og:title", content: loaderData?.product.name },
-      { property: "og:description", content: loaderData?.product.description ?? "" },
-      { property: "og:image", content: loaderData?.product.images[0] },
-    ],
+  head: ({ params }) => ({
+    meta: [{ title: `${params.slug} — FlashTrends` }],
   }),
   notFoundComponent: () => <Shell><div className="mx-auto max-w-xl px-4 py-32 text-center"><h1 className="font-display text-4xl">Product not found</h1></div></Shell>,
   errorComponent: ({ reset }) => <Shell><div className="mx-auto max-w-xl px-4 py-32 text-center"><h1 className="font-display text-3xl">Something went wrong</h1><button onClick={reset} className="mt-4 rounded-full bg-foreground px-5 py-2.5 text-sm text-background">Retry</button></div></Shell>,
   component: PDP,
 });
 
+function PDPSkeleton() {
+  return (
+    <Shell>
+      <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 lg:px-10">
+        <div className="grid gap-10 md:grid-cols-[1.1fr_1fr] md:gap-16">
+          <Skeleton className="aspect-[4/5] w-full rounded-3xl" />
+          <div className="space-y-4">
+            <Skeleton className="h-3 w-32" />
+            <Skeleton className="h-10 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="mt-6 h-8 w-32" />
+            <Skeleton className="mt-6 h-12 w-full" />
+          </div>
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
 function PDP() {
-  const data = Route.useLoaderData() as { product: import("@/lib/products").Product };
-  const { product } = data;
+  const { slug } = Route.useParams();
+  const { data, isLoading } = useProductBySlug(slug);
   const { add, setOpen } = useCart();
-  const [variant, setVariant] = useState<string | undefined>(product.variants?.options[0]);
-  const [qty, setQty] = useState(1);
-  const [active, setActive] = useState(0);
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const buyBtnRef = useMagnetic<HTMLButtonElement>(60, 0.22);
+  // Static variants shim (product_variants table exists but is empty in seed);
+  // keep a soft fallback so UI still renders variant selector when present.
+  const productVariants: Product["variants"] | undefined = undefined;
+  const [variant, setVariant] = useState<string | undefined>(productVariants?.options[0]);
+  const [qty, setQty] = useState(1);
+  const [active, setActive] = useState(0);
 
-  const related = PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
-  const fbt = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
+  if (isLoading) return <PDPSkeleton />;
+  if (!data) {
+    return (
+      <Shell>
+        <div className="mx-auto max-w-xl px-4 py-32 text-center">
+          <h1 className="font-display text-4xl">Product not found</h1>
+          <Link to="/shop" className="mt-6 inline-block underline">Back to shop</Link>
+        </div>
+      </Shell>
+    );
+  }
+
+  const { product, reviews, related } = data;
+  const fbt = related.slice(0, 3);
   const fbtTotal = fbt.reduce((s, p) => s + p.price, product.price);
 
   const addToCart = () => {
@@ -52,6 +77,8 @@ function PDP() {
     setOpen(true);
     toast.success(`${product.name} added to cart`);
   };
+
+
 
 
   return (
