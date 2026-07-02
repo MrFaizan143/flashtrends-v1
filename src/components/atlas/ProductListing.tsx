@@ -134,7 +134,18 @@ export function ProductListing({
             </div>
           </div>
 
-          {filtered.length === 0 ? (
+          {loading ? (
+            <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i}>
+                  <Skeleton className="aspect-[4/5] w-full rounded-2xl" />
+                  <Skeleton className="mt-3 h-3 w-1/2" />
+                  <Skeleton className="mt-2 h-4 w-3/4" />
+                  <Skeleton className="mt-2 h-3 w-1/3" />
+                </div>
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="mt-10">
               <EmptyState
                 icon="search"
@@ -155,6 +166,7 @@ export function ProductListing({
               ))}
             </div>
           )}
+
         </div>
       </div>
     </div>
