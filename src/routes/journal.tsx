@@ -2,7 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/atlas/Shell";
 import { PageIntro } from "@/components/atlas/PageIntro";
 import { useReveal, staggerStyle } from "@/lib/use-reveal";
-import { ARTICLES, type Article } from "@/lib/journal-articles";
+import { type Article } from "@/lib/journal-articles";
+import { useArticles } from "@/lib/storefront";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export const Route = createFileRoute("/journal")({
