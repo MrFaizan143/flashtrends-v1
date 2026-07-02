@@ -264,17 +264,21 @@ function PDP() {
                   </ul>
                 </div>
                 <ul className="mt-8 space-y-6">
-                  {REVIEWS.map((r) => (
+                  {reviews.length === 0 && (
+                    <li className="text-sm text-muted-foreground">No reviews yet — be the first.</li>
+                  )}
+                  {reviews.map((r) => (
                     <li key={r.id} className="border-t border-border pt-5">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2"><Rating value={r.rating} /><p className="text-sm font-medium">{r.title}</p></div>
-                        <span className="text-xs text-muted-foreground">{r.date}</span>
+                        <div className="flex items-center gap-2"><Rating value={r.rating} /><p className="text-sm font-medium">{r.title ?? ""}</p></div>
+                        <span className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</span>
                       </div>
                       <p className="mt-2 text-sm text-muted-foreground">{r.body}</p>
-                      <p className="mt-2 text-xs text-muted-foreground">{r.author}{r.verified && " · Verified buyer"}</p>
+                      <p className="mt-2 text-xs text-muted-foreground">{r.author_name}{r.verified_purchase && " · Verified buyer"}</p>
                     </li>
                   ))}
                 </ul>
+
               </TabsContent>
             </Tabs>
           </div>
