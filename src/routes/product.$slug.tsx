@@ -159,14 +159,14 @@ function PDP() {
             </div>
             <p className="mt-1 text-xs text-muted-foreground">Tax included. Shipping calculated at checkout.</p>
 
-            {product.variants && (
+            {productVariants && (
               <div className="mt-8">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium">{product.variants.label}: <span className="text-muted-foreground">{variant}</span></p>
+                  <p className="text-sm font-medium">{productVariants.label}: <span className="text-muted-foreground">{variant}</span></p>
                   <button className="text-xs text-muted-foreground underline">Size guide</button>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {product.variants.options.map((o) => (
+                  {productVariants.options.map((o) => (
                     <button
                       key={o}
                       onClick={() => setVariant(o)}
@@ -178,6 +178,7 @@ function PDP() {
                 </div>
               </div>
             )}
+
 
             <div className="mt-6 flex items-center gap-2 text-xs">
               <span className={`relative inline-flex h-2 w-2 rounded-full ${product.stock < 10 ? "bg-[color:var(--clay)]" : "bg-emerald-600"}`}>
